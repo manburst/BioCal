@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioCalc Tools</title>
+  <!-- Link to external CSS (Update the path if needed) -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>BioCalc Tools</h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="https://www.google.com">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main container -->
+  <main class="main-content">
+    
+    <!-- ================== -->
+    <!-- 1) TOOL CARDS LIST -->
+    <!-- ================== -->
+    <section class="tool-list" id="tool-list">
+      <!-- Card: PCR Master Mix -->
+      <a href="#" class="tool-card" data-target="pcr-section">
+        <div class="tool-image-wrapper">
+          <img src="https://via.placeholder.com/400x300" alt="PCR Master Mix Calculator">
+        </div>
+        <h3>PCR Master Mix</h3>
+      </a>
+      
+      <!-- Card: Bacterial Growth -->
+      <a href="#" class="tool-card" data-target="bacterial-section">
+        <div class="tool-image-wrapper">
+          <img src="https://via.placeholder.com/400x300" alt="Bacterial Growth">
+        </div>
+        <h3>Bacterial Growth</h3>
+      </a>
+
+      <!-- Card: Gel Electrophoresis -->
+      <a href="#" class="tool-card" data-target="gel-section">
+        <div class="tool-image-wrapper">
+          <img src="https://via.placeholder.com/400x300" alt="Gel Electrophoresis">
+        </div>
+        <h3>Gel Electrophoresis</h3>
+      </a>
+
+      <!-- Card: SDS-PAGE -->
+      <a href="#" class="tool-card" data-target="sds-section">
+        <div class="tool-image-wrapper">
+          <img src="https://via.placeholder.com/400x300" alt="SDS-PAGE Calculator">
+        </div>
+        <h3>SDS-PAGE</h3>
+      </a>
+
+      <!-- Card: Molarity & Dilution -->
+      <a href="#" class="tool-card" data-target="molarity-section">
+        <div class="tool-image-wrapper">
+          <img src="https://via.placeholder.com/400x300" alt="Molarity & Dilution">
+        </div>
+        <h3>Molarity &amp; Dilution</h3>
+      </a>
+
+      <!-- Card: Oligo Suite -->
+      <a href="#" class="tool-card" data-target="oligo-section">
+        <div class="tool-image-wrapper">
+          <img src="https://via.placeholder.com/400x300" alt="Oligo Calculator Suite">
+        </div>
+        <h3>Oligo Suite</h3>
+      </a>
+
+      <!-- Card: Centrifugation -->
+      <a href="#" class="tool-card" data-target="centrifuge-section">
+        <div class="tool-image-wrapper">
+          <img src="https://via.placeholder.com/400x300" alt="Centrifugation Converter">
+        </div>
+        <h3>Centrifugation</h3>
+      </a>
+    </section>
+
+
+    <!-- ======================================== -->
+    <!-- 2) CALCULATOR SECTIONS (Initially Hidden) -->
+    <!-- ======================================== -->
+
+    <!-- PCR Master Mix Calculator -->
+    <section id="pcr-section" class="calc-section">
+      <h2>PCR Master Mix Calculator</h2>
+      <form class="calc-form">
+        <!-- Number of Reactions -->
+        <div class="form-group">
+          <label for="pcrReactions">Number of Reactions</label>
+          <input type="number" id="pcrReactions" min="1" placeholder="e.g., 10">
+        </div>
+        <!-- Volume per Reaction -->
+        <div class="form-group">
+          <label for="pcrVolume">Reaction Volume (µL)</label>
+          <input type="number" id="pcrVolume" step="0.1" placeholder="e.g., 25">
+        </div>
+        <!-- Primer final concentration -->
+        <div class="form-group">
+          <label for="primerConc">Desired Primer final (µM)</label>
+          <input type="number" id="primerConc" step="0.1" placeholder="e.g., 0.5">
+        </div>
+        <!-- Taq, dNTPs, etc. can be added similarly -->
+
+        <button type="button" id="pcrCalcBtn" class="primary-btn">Calculate</button>
+      </form>
+      <div id="pcrResult" class="result-box"></div>
+
+      <button type="button" class="back-btn" data-back="true">Back</button>
+    </section>
+
+
+    <!-- Bacterial Growth Calculator -->
+    <section id="bacterial-section" class="calc-section">
+      <h2>Bacterial Growth / Doubling Time</h2>
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="initialOD">Initial OD (e.g., OD<sub>600</sub>)</label>
+          <input type="number" id="initialOD" step="0.01" placeholder="e.g., 0.1">
+        </div>
+        <div class="form-group">
+          <label for="doublingTime">Doubling Time (minutes)</label>
+          <input type="number" id="doublingTime" step="1" placeholder="e.g., 20">
+        </div>
+        <div class="form-group">
+          <label for="growthHours">Growth Time (hours)</label>
+          <input type="number" id="growthHours" step="0.5" placeholder="e.g., 8">
+        </div>
+        
+        <button type="button" id="growthCalcBtn" class="primary-btn">Calculate</button>
+      </form>
+      <div id="growthResult" class="result-box"></div>
+
+      <button type="button" class="back-btn" data-back="true">Back</button>
+    </section>
+
+
+    <!-- Gel Electrophoresis -->
+    <section id="gel-section" class="calc-section">
+      <h2>Gel Electrophoresis Calculator</h2>
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="gelVolume">Gel Volume (mL)</label>
+          <input type="number" id="gelVolume" step="1" placeholder="e.g., 50">
+        </div>
+        <div class="form-group">
+          <label for="gelPercentage">Agarose Percentage (%)</label>
+          <input type="number" id="gelPercentage" step="0.1" placeholder="e.g., 1.2">
+        </div>
+        
+        <button type="button" id="gelCalcBtn" class="primary-btn">Calculate</button>
+      </form>
+      <div id="gelResult" class="result-box"></div>
+
+      <button type="button" class="back-btn" data-back="true">Back</button>
+    </section>
+
+
+    <!-- SDS-PAGE -->
+    <section id="sds-section" class="calc-section">
+      <h2>SDS-PAGE Calculator</h2>
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="proteinMigration">Protein Migration (mm)</label>
+          <input type="number" id="proteinMigration" step="0.1" placeholder="e.g., 35">
+        </div>
+        <!-- Could also include standard ladder fields if you want -->
+        
+        <button type="button" id="sdsCalcBtn" class="primary-btn">Calculate</button>
+      </form>
+      <div id="sdsResult" class="result-box"></div>
+
+      <button type="button" class="back-btn" data-back="true">Back</button>
+    </section>
+
+
+    <!-- Molarity & Dilution -->
+    <section id="molarity-section" class="calc-section">
+      <h2>Molarity &amp; Dilution Calculator</h2>
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="stockConc">Stock Concentration (M<sub>1</sub>)</label>
+          <input type="number" id="stockConc" step="0.01" placeholder="e.g., 1">
+        </div>
+        <div class="form-group">
+          <label for="finalConc">Desired Final Concentration (M<sub>2</sub>)</label>
+          <input type="number" id="finalConc" step="0.01" placeholder="e.g., 0.1">
+        </div>
+        <div class="form-group">
+          <label for="finalVolume">Final Volume (mL)</label>
+          <input type="number" id="finalVolume" step="0.1" placeholder="e.g., 10">
+        </div>
+        
+        <button type="button" id="dilutionCalcBtn" class="primary-btn">Calculate</button>
+      </form>
+      <div id="dilutionResult" class="result-box"></div>
+
+      <button type="button" class="back-btn" data-back="true">Back</button>
+    </section>
+
+
+    <!-- Oligo Suite -->
+    <section id="oligo-section" class="calc-section">
+      <h2>Oligo Calculator Suite</h2>
+      <form class="calc-form">
+        <!-- Oligo Calculator (Tm, GC, etc.) -->
+        <h3>Oligo Calculator</h3>
+        <div class="form-group">
+          <label for="oligoSequence">DNA/RNA Sequence</label>
+          <input type="text" id="oligoSequence" placeholder="e.g., ATGCGT...">
+        </div>
+        <button type="button" id="oligoCalcBtn" class="primary-btn">Calculate Tm &amp; GC</button>
+        <div id="oligoResult" class="result-box"></div>
+
+        <!-- Reverse Complement -->
+        <h3>Reverse Complement</h3>
+        <div class="form-group">
+          <label for="rcSequence">DNA Sequence</label>
+          <input type="text" id="rcSequence" placeholder="e.g., ATGCGT...">
+        </div>
+        <button type="button" id="rcCalcBtn" class="primary-btn">Get Reverse Complement</button>
+        <div id="rcResult" class="result-box"></div>
+
+        <!-- Transcription & Translation -->
+        <h3>Transcription &amp; Translation</h3>
+        <div class="form-group">
+          <label for="dnaInput">DNA Sequence (for mRNA &amp; Protein)</label>
+          <input type="text" id="dnaInput" placeholder="e.g., ATGCGT...">
+        </div>
+        <button type="button" id="transcribeTranslateBtn" class="primary-btn">
+          Transcribe &amp; Translate
+        </button>
+        <div id="transResult" class="result-box"></div>
+      </form>
+
+      <button type="button" class="back-btn" data-back="true">Back</button>
+    </section>
+
+
+    <!-- Centrifugation -->
+    <section id="centrifuge-section" class="calc-section">
+      <h2>Centrifugation (RCF &harr; RPM)</h2>
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="rotorRadius">Rotor Radius (cm)</label>
+          <input type="number" id="rotorRadius" step="0.1" placeholder="e.g., 7.5">
+        </div>
+        <div class="form-group">
+          <label for="rcf">RCF (g)</label>
+          <input type="number" id="rcf" step="10" placeholder="e.g., 5000">
+        </div>
+        <div class="form-group">
+          <label for="rpm">RPM</label>
+          <input type="number" id="rpm" step="10" placeholder="e.g., 8000">
+        </div>
+        
+        <button type="button" id="centrifugeCalcBtn" class="primary-btn">Calculate</button>
+      </form>
+      <div id="centrifugeResult" class="result-box"></div>
+
+      <button type="button" class="back-btn" data-back="true">Back</button>
+    </section>
+
+  </main>
+
+  <!-- Footer (optional) -->
+  <footer class="footer">
+    <p>&copy; 2025 BioCalc Toolbox. All rights reserved.</p>
+  </footer>
+
+  <!-- 
+    IMPORTANT:
+    We do NOT include any <script> for logic here, 
+    because you said you'll handle JS later.
+    Link to your external "tools.js" once ready:
+    <script src="js/tools.js"></script>
+  -->
+
+</body>
+</html>
