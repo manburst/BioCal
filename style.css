@@ -39,18 +39,18 @@ body {
   }
 }
 
-/* Container that centers content in the viewport */
+/* Home container centers content */
 .home-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center; 
   text-align: center;
-  flex: 1; /* make it fill available vertical space */
+  flex: 1;
   padding: 2rem;
 }
 
-/* Main large title */
+/* Big title on Home page */
 .main-title {
   font-size: 3rem;
   font-weight: 700; 
@@ -58,7 +58,7 @@ body {
   color: #111; 
 }
 
-/* Smaller subtitle text */
+/* Subtitle on Home page */
 .subtitle {
   font-size: 1.25rem;
   max-width: 600px;
@@ -67,67 +67,62 @@ body {
   line-height: 1.4;
 }
 
-/* Button group container */
+/* Home page buttons */
 .button-group {
   display: flex;
   gap: 1rem;
 }
 
-/* Round, pill-like buttons */
+/* Rounded (pill-like) buttons */
 .rounded-btn {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background-color: #007aff; /* Apple-like accent */
+  background-color: #007aff;
   color: #fff;
   text-decoration: none;
-  border-radius: 9999px; /* fully rounded corners */
+  border-radius: 9999px;
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
-
 .rounded-btn:hover {
   background-color: #006ae6;
 }
 
 /* =========================
    3) Header & Navbar
-   (Used if you have a header 
-   on other pages)
 ========================= */
 .header {
   background-color: #ffffff;
   padding: 1rem 2rem;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
-
 .header h1 {
   font-weight: 600;
   margin-bottom: 0.5rem;
 }
-
 .navbar ul {
   list-style: none;
   display: flex;
   gap: 1rem;
 }
-
 .navbar a {
   text-decoration: none;
-  color: #007aff; /* Apple-like blue */
+  color: #007aff;
   font-weight: 500;
 }
-
 .navbar a:hover {
   text-decoration: underline;
 }
 
 /* =========================
    4) Main Layout
-   (Used if other pages 
-   have a <main> tag)
 ========================= */
 main {
-  flex: 1; /* so footer stays at bottom */
+  /* This affects pages using <main>. 
+     If you want the tools page wider, 
+     replace 'main' with a custom .main-content 
+     or increase max-width. */
+  flex: 1;
   width: 90%;
   max-width: 800px;
   margin: 2rem auto;
@@ -138,8 +133,6 @@ main {
 
 /* =========================
    5) Card / Section Style
-   (Used if you have cards
-   or sections on other pages)
 ========================= */
 .card {
   background-color: #fff;
@@ -147,7 +140,6 @@ main {
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   padding: 1.5rem;
 }
-
 .card h2 {
   margin-bottom: 1rem;
   font-weight: 600;
@@ -155,20 +147,16 @@ main {
 }
 
 /* =========================
-   6) Form & Buttons 
-   (Used if you have forms 
-   on other pages)
+   6) Form & Buttons
 ========================= */
 .form-group {
   margin-bottom: 1rem;
 }
-
 label {
   display: block;
   font-weight: 500;
   margin-bottom: 0.3rem;
 }
-
 input[type="number"],
 input[type="text"] {
   width: 100%;
@@ -178,10 +166,9 @@ input[type="text"] {
   outline: none;
   font-size: 1rem;
 }
-
 .primary-btn {
   padding: 0.6rem 1.2rem;
-  background-color: #007aff; /* Apple-like accent */
+  background-color: #007aff;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -190,15 +177,12 @@ input[type="text"] {
   font-weight: 500;
   margin-top: 0.5rem;
 }
-
 .primary-btn:hover {
-  background-color: #006ae6; 
+  background-color: #006ae6;
 }
 
 /* =========================
    7) Result Display
-   (Used if you show results
-   in a box on other pages)
 ========================= */
 .result-box {
   margin-top: 1rem;
@@ -217,4 +201,96 @@ input[type="text"] {
   padding: 1rem;
   background-color: #ffffff;
   box-shadow: 0 -1px 4px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   9) TOOLS PAGE LAYOUT
+========================= */
+
+/* 
+   If you want a wider layout on Tools page, 
+   use a custom .main-content in the HTML 
+   instead of 'main' and style it here:
+*/
+/*
+.main-content {
+  flex: 1;
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+*/
+
+/* The grid of tool cards */
+.tool-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Each individual card in the tools grid */
+.tool-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  text-align: center;
+  padding: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  color: #333;
+  text-decoration: none;
+}
+.tool-card:hover {
+  transform: scale(1.02);
+}
+.tool-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+.tool-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  color: #444;
+}
+
+/* Calculator sections hidden by default */
+.calc-section {
+  display: none;
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+}
+.calc-section.active {
+  display: block;
+}
+.calc-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* "Back" button to return to tool list */
+.back-btn {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #999;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+.back-btn:hover {
+  background-color: #777;
 }
