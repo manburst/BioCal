@@ -20,95 +20,68 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  /* We'll also handle fade-out transitions here */
+  transition: opacity 0.8s ease-out;
 }
 
 /* =========================
-   2) Home Page (Centering,
-      Fade-in, etc.)
+   2) Fade In & Out
 ========================= */
-
-/* Fade-in animation */
 .fade-in {
   opacity: 0;
-  animation: fadeIn 1.2s ease forwards;
+  animation: fadeIn 1.2s ease forwards; /* fade from 0 to 1 */
 }
-
 @keyframes fadeIn {
   to {
     opacity: 1;
   }
 }
-
-/* Home container centers content */
-.home-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; 
-  text-align: center;
-  flex: 1;
-  padding: 2rem;
-}
-
-/* Big title on Home page */
-.main-title {
-  font-size: 3rem;
-  font-weight: 700; 
-  margin-bottom: 0.75rem;
-  color: #111; 
-}
-
-/* Subtitle on Home page */
-.subtitle {
-  font-size: 1.25rem;
-  max-width: 600px;
-  margin-bottom: 2rem;
-  color: #555;
-  line-height: 1.4;
-}
-
-/* Home page buttons */
-.button-group {
-  display: flex;
-  gap: 1rem;
-}
-
-/* Rounded (pill-like) buttons */
-.rounded-btn {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background-color: #007aff;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 9999px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-.rounded-btn:hover {
-  background-color: #006ae6;
+.fade-out {
+  opacity: 0; /* transitions to 0 over 0.8s because of body { transition } */
 }
 
 /* =========================
    3) Header & Navbar
 ========================= */
 .header {
-  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
   padding: 1rem 2rem;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 .header h1 {
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
 }
+
+/* We place the subtitle directly under h1 but in the same container */
+.header-info {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Single-line subtitle */
+.subtitle.single-line {
+  white-space: nowrap;      /* force single line */
+  overflow: hidden;
+  text-overflow: ellipsis;  /* show "..." if it’s too long for the container */
+  margin: 0;                /* remove extra spacing */
+}
+
 .navbar ul {
   list-style: none;
   display: flex;
   gap: 1rem;
 }
+
+/* Make About link a bit bigger */
 .navbar a {
   text-decoration: none;
   color: #007aff;
   font-weight: 500;
+  font-size: 1.1rem; /* bigger link */
 }
 .navbar a:hover {
   text-decoration: underline;
@@ -118,10 +91,6 @@ body {
    4) Main Layout
 ========================= */
 main {
-  /* This affects pages using <main>. 
-     If you want the tools page wider, 
-     replace 'main' with a custom .main-content 
-     or increase max-width. */
   flex: 1;
   width: 90%;
   max-width: 800px;
@@ -132,107 +101,14 @@ main {
 }
 
 /* =========================
-   5) Card / Section Style
+   5) Tool Cards (index page)
 ========================= */
-.card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  padding: 1.5rem;
-}
-.card h2 {
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: #444;
-}
-
-/* =========================
-   6) Form & Buttons
-========================= */
-.form-group {
-  margin-bottom: 1rem;
-}
-label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 0.3rem;
-}
-input[type="number"],
-input[type="text"] {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  outline: none;
-  font-size: 1rem;
-}
-.primary-btn {
-  padding: 0.6rem 1.2rem;
-  background-color: #007aff;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
-}
-.primary-btn:hover {
-  background-color: #006ae6;
-}
-
-/* =========================
-   7) Result Display
-========================= */
-.result-box {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #f1f9ff;
-  border-radius: 8px;
-  border: 1px solid #cce7ff;
-  color: #333;
-}
-
-/* =========================
-   8) Footer
-========================= */
-.footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #ffffff;
-  box-shadow: 0 -1px 4px rgba(0,0,0,0.1);
-}
-
-/* =========================
-   9) TOOLS PAGE LAYOUT
-========================= */
-
-/* 
-   If you want a wider layout on Tools page, 
-   use a custom .main-content in the HTML 
-   instead of 'main' and style it here:
-*/
-/*
-.main-content {
-  flex: 1;
-  width: 90%;
-  max-width: 1200px;
-  margin: 2rem auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-*/
-
-/* The grid of tool cards */
 .tool-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
-
-/* Each individual card in the tools grid */
 .tool-card {
   background-color: #fff;
   border-radius: 12px;
@@ -260,7 +136,10 @@ input[type="text"] {
   color: #444;
 }
 
-/* Calculator sections hidden by default */
+/* =========================
+   6) Calculator Sections
+   (For separate tool pages)
+========================= */
 .calc-section {
   display: none;
   background-color: #fff;
@@ -279,7 +158,7 @@ input[type="text"] {
   font-weight: 600;
 }
 
-/* "Back" button to return to tool list */
+/* "Back" button styling */
 .back-btn {
   margin-top: 1rem;
   padding: 0.6rem 1.2rem;
@@ -293,4 +172,14 @@ input[type="text"] {
 }
 .back-btn:hover {
   background-color: #777;
+}
+
+/* =========================
+   7) Footer
+========================= */
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  box-shadow: 0 -1px 4px rgba(0,0,0,0.1);
 }
