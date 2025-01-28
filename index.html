@@ -3,199 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BioCalc Toolbox</title>
+  <title>BioCalc - Home</title>
+  <!-- Link to your external CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <h1>BioCalc Toolbox</h1>
-    <nav class="navbar">
-      <ul>
-        <li><a href="#pcr-calculator">PCR Master Mix</a></li>
-        <li><a href="#bacterial-growth">Bacterial Growth</a></li>
-        <li><a href="#gel-electrophoresis">Gel Electrophoresis</a></li>
-        <li><a href="#sds-page">SDS-PAGE</a></li>
-        <li><a href="#molarity-dilution">Molarity &amp; Dilution</a></li>
-        <li><a href="#oligo-suite">Oligo Suite</a></li>
-        <li><a href="#centrifugation">Centrifugation</a></li>
-      </ul>
-    </nav>
-  </header>
 
-  <!-- Main Content -->
-  <main>
-    <!-- 1) PCR Master Mix Calculator -->
-    <section id="pcr-calculator" class="card">
-      <h2>PCR Master Mix Calculator</h2>
-      <p>Calculate reagent volumes for multiple PCR reactions.</p>
-      
-      <div class="form-group">
-        <label for="pcrReactions">Number of Reactions</label>
-        <input type="number" id="pcrReactions" placeholder="e.g., 10" min="1">
-      </div>
+  <div class="home-container fade-in">
+    <h1 class="main-title">BioCalc</h1>
+    <p class="subtitle">
+      A simple and modern tool to power your biology & chemistry calculations.
+    </p>
 
-      <div class="form-group">
-        <label for="finalVolume">Final Volume per Reaction (µL)</label>
-        <input type="number" id="finalVolume" placeholder="e.g., 20" step="0.1">
-      </div>
+    <div class="button-group">
+      <!-- Tools button: link to your actual tools page -->
+      <a href="tools.html" class="rounded-btn">Tools</a>
 
-      <!-- Add additional fields: primer concentration, dNTP, etc. -->
+      <!-- About button: currently links to Google -->
+      <a href="https://manburst.github.io/jksunji.github.io/" class="rounded-btn">About</a>
+    </div>
+  </div>
 
-      <button id="pcrCalcBtn" class="primary-btn">Calculate</button>
-
-      <div id="pcrResult" class="result-box"></div>
-    </section>
-
-    <!-- 2) Bacterial Growth / Doubling Time Calculator -->
-    <section id="bacterial-growth" class="card">
-      <h2>Bacterial Growth Calculator</h2>
-      <p>Estimate culture density over time or how long to reach a target OD.</p>
-
-      <div class="form-group">
-        <label for="initialOD">Initial OD<sub>600</sub></label>
-        <input type="number" id="initialOD" placeholder="e.g., 0.1" step="0.01">
-      </div>
-
-      <div class="form-group">
-        <label for="doublingTime">Doubling Time (minutes)</label>
-        <input type="number" id="doublingTime" placeholder="e.g., 20" step="0.1">
-      </div>
-
-      <div class="form-group">
-        <label for="growthTime">Growth Time (hours)</label>
-        <input type="number" id="growthTime" placeholder="e.g., 8" step="0.1">
-      </div>
-
-      <!-- Or let the user specify a target OD and calculate time -->
-
-      <button id="growthCalcBtn" class="primary-btn">Calculate</button>
-      <div id="growthResult" class="result-box"></div>
-    </section>
-
-    <!-- 3) Gel Electrophoresis Volume & Concentration Calculator -->
-    <section id="gel-electrophoresis" class="card">
-      <h2>Gel Electrophoresis Calculator</h2>
-      <p>Compute agarose mass, buffer volume, etc.</p>
-
-      <div class="form-group">
-        <label for="gelVolume">Gel Volume (mL)</label>
-        <input type="number" id="gelVolume" placeholder="e.g., 50" step="1">
-      </div>
-
-      <div class="form-group">
-        <label for="gelPercentage">Agarose Percentage (%)</label>
-        <input type="number" id="gelPercentage" placeholder="e.g., 1.2" step="0.1">
-      </div>
-
-      <button id="gelCalcBtn" class="primary-btn">Calculate</button>
-      <div id="gelResult" class="result-box"></div>
-    </section>
-
-    <!-- 4) SDS-PAGE Calculator -->
-    <section id="sds-page" class="card">
-      <h2>SDS-PAGE Calculator</h2>
-      <p>Estimate protein size from migration or plan gel percentages.</p>
-
-      <div class="form-group">
-        <label for="proteinMigration">Protein Migration (mm)</label>
-        <input type="number" id="proteinMigration" placeholder="e.g., 35" step="0.1">
-      </div>
-
-      <!-- Additional fields: standard ladder data, etc. -->
-
-      <button id="sdsCalcBtn" class="primary-btn">Calculate</button>
-      <div id="sdsResult" class="result-box"></div>
-    </section>
-
-    <!-- 5) Molarity & Dilution Calculator -->
-    <section id="molarity-dilution" class="card">
-      <h2>Molarity &amp; Dilution Calculator</h2>
-      <p>Perform M1V1 = M2V2 calculations for solution prep.</p>
-
-      <div class="form-group">
-        <label for="stockConc">Stock Concentration (M<sub>1</sub>)</label>
-        <input type="number" id="stockConc" placeholder="e.g., 1" step="0.01">
-      </div>
-
-      <div class="form-group">
-        <label for="finalConc">Desired Final Concentration (M<sub>2</sub>)</label>
-        <input type="number" id="finalConc" placeholder="e.g., 0.1" step="0.01">
-      </div>
-
-      <div class="form-group">
-        <label for="finalVolume">Final Volume (V<sub>2</sub>, mL)</label>
-        <input type="number" id="finalVolume" placeholder="e.g., 10" step="0.1">
-      </div>
-
-      <button id="dilutionCalcBtn" class="primary-btn">Calculate</button>
-      <div id="dilutionResult" class="result-box"></div>
-    </section>
-
-    <!-- 6) Oligo Suite (Oligo Calculator + Reverse Complement + Transcription/Translation) -->
-    <section id="oligo-suite" class="card">
-      <h2>Oligo Suite</h2>
-
-      <!-- a) Oligo Calculator (Tm, GC, etc.) -->
-      <h3>Oligo Calculator</h3>
-      <div class="form-group">
-        <label for="oligoSequence">DNA/RNA Sequence</label>
-        <input type="text" id="oligoSequence" placeholder="e.g., ATGCGT...">
-      </div>
-      <button id="oligoCalcBtn" class="primary-btn">Calculate Tm & GC</button>
-      <div id="oligoResult" class="result-box"></div>
-
-      <!-- b) Reverse Complement -->
-      <h3>Reverse Complement</h3>
-      <div class="form-group">
-        <label for="rcSequence">DNA Sequence</label>
-        <input type="text" id="rcSequence" placeholder="e.g., ATGCGT...">
-      </div>
-      <button id="rcCalcBtn" class="primary-btn">Get Reverse Complement</button>
-      <div id="rcResult" class="result-box"></div>
-
-      <!-- c) Transcription/Translation -->
-      <h3>Transcription &amp; Translation</h3>
-      <div class="form-group">
-        <label for="dnaInput">DNA Sequence (for mRNA + Protein)</label>
-        <input type="text" id="dnaInput" placeholder="e.g., ATGCGT...">
-      </div>
-      <button id="transcribeTranslateBtn" class="primary-btn">Transcribe &amp; Translate</button>
-      <div id="transResult" class="result-box"></div>
-    </section>
-
-    <!-- 7) Centrifugation Calculator (RCF ↔ RPM) -->
-    <section id="centrifugation" class="card">
-      <h2>Centrifugation (RCF ↔ RPM)</h2>
-      <p>Convert between g-force (RCF) and RPM.</p>
-
-      <div class="form-group">
-        <label for="rotorRadius">Rotor Radius (cm)</label>
-        <input type="number" id="rotorRadius" placeholder="e.g., 7.5" step="0.1">
-      </div>
-
-      <div class="form-group">
-        <label for="rcf">RCF (g)</label>
-        <input type="number" id="rcf" placeholder="e.g., 5000" step="10">
-      </div>
-
-      <div class="form-group">
-        <label for="rpm">RPM</label>
-        <input type="number" id="rpm" placeholder="e.g., 8000" step="10">
-      </div>
-
-      <button id="centrifugeCalcBtn" class="primary-btn">Calculate</button>
-      <div id="centrifugeResult" class="result-box"></div>
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2025 BioCalc Toolbox. All rights reserved.</p>
-  </footer>
-
-  <!-- External JS -->
-  <script src="js/main.js"></script>
 </body>
 </html>
