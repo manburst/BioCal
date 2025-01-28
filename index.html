@@ -4,31 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BioCalc</title>
-  <!-- Link to your shared CSS (style.css) -->
+  <!-- Link to your shared CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="fade-in" id="body-fade">
 
   <!-- Header -->
   <header class="header">
-    <h1>BioCalc</h1>
+    <!-- Title + description in same container -->
+    <div class="header-info">
+      <h1>BioCalc</h1>
+      <p class="subtitle single-line">
+        A simple and modern tool to power your biology &amp; chemistry calculations.
+      </p>
+    </div>
+
+    <!-- About link on the right -->
     <nav class="navbar">
       <ul>
-        <!-- Push "About" to the far right -->
-        <li style="flex:1;"></li>
         <li><a href="https://www.google.com">About</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Short description below title -->
-  <p class="subtitle" style="text-align:center; margin-top: 0.5rem;">
-    A simple and modern tool to power your biology &amp; chemistry calculations.
-  </p>
-
   <!-- Main container for the tool cards -->
-  <main class="main-content">
-
+  <main>
     <!-- The grid of 6 tool cards -->
     <section class="tool-list">
       <!-- 1) PCR -->
@@ -67,7 +67,6 @@
         <h3>Unit Conversion</h3>
       </div>
     </section>
-
   </main>
 
   <!-- Optional Footer 
@@ -100,6 +99,5 @@
       });
     });
   </script>
-
 </body>
 </html>
