@@ -9,19 +9,23 @@
 </head>
 <body>
 
-  <!-- Header (optional) -->
+  <!-- Header with link back to Home -->
   <header class="header">
     <h1>PCR Calculators</h1>
-    <!-- You can add a "Back" or "Home" link here if desired -->
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
   </header>
 
   <!-- Main content with two calculator sections -->
   <main>
     <!-- 1) PCR DNA Copy Number Calculator -->
-    <section class="calc-section">
+    <!-- Mark as "active" so it’s displayed without needing JS -->
+    <section class="calc-section active">
       <h2>PCR DNA Copy Number Calculator</h2>
       <form class="calc-form" id="copyNumberForm">
-        <!-- Example fields: DNA mass, length, etc. -->
         <div class="form-group">
           <label for="dnaMass">Template Mass (ng)</label>
           <input type="number" id="dnaMass" placeholder="e.g., 10">
@@ -39,7 +43,7 @@
     </section>
 
     <!-- 2) Annealing Temperature (Tm) Calculator -->
-    <section class="calc-section">
+    <section class="calc-section active">
       <h2>Annealing Temperature Calculator</h2>
       <form class="calc-form" id="annealingForm">
         <div class="form-group">
@@ -53,13 +57,6 @@
       <div id="annealingResult" class="result-box"></div>
     </section>
   </main>
-
-  <!-- Footer (optional) -->
-  <!--
-  <footer class="footer">
-    <p>&copy; 2025 BioCalc Toolbox. All rights reserved.</p>
-  </footer>
-  -->
 
   <!-- Embedded JS for both calculators -->
   <script>
@@ -78,16 +75,10 @@
         return;
       }
 
-      /*
-       * EXAMPLE FORMULA (very simplified):
-       * 1) Convert ng -> g
-       * 2) One bp has average MW ~ 650 g/mol (approx)
-       * 3) #moles = (mass / MW)
-       * 4) #copies = #moles * Avogadro's number
-       */
+      // Simple example formula:
       const avogadro = 6.022e23;
-      const massInGrams = dnaMass * 1e-9;  // ng -> g
-      const avgMwPerBp = 650;             // g/mol per bp, approx
+      const massInGrams = dnaMass * 1e-9;  // convert ng -> g
+      const avgMwPerBp = 650;             // approximate g/mol per bp
       const totalMw = dnaLength * avgMwPerBp; 
       const moles = massInGrams / totalMw;
       const copies = moles * avogadro;
@@ -121,13 +112,12 @@
           case 'C': cCount++; break;
         }
       }
-
       // Very simplistic "Wallace rule": Tm = 2*(A+T) + 4*(G+C)
       const tm = 2 * (aCount + tCount) + 4 * (gCount + cCount);
 
       annealingResult.innerHTML = `
         <p>Primer length: <strong>${seq.length}</strong> bases</p>
-        <p>Estimated Tm (basic Wallace rule): 
+        <p>Estimated Tm (Wallace rule): 
           <strong>${tm} °C</strong>
         </p>
       `;
