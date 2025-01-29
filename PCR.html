@@ -1,102 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BioCalc</title>
-  <!-- Link to your shared CSS (style.css) -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCR Calculators</title>
+  <!-- Link to the shared CSS (style.css) -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="fade-in" id="body-fade">
+<body>
 
-  <!-- Header -->
+  <!-- Header (optional) -->
   <header class="header">
-    <!-- Title + description stacked on the left -->
-    <div class="header-info">
-      <h1>BioCalc</h1>
-      <p>
-        A simple and modern tool to power your biology &amp; chemistry calculations.
-      </p>
-    </div>
-
-    <!-- About link on the far right -->
-    <nav class="navbar">
-      <ul>
-        <li><a href="https://www.google.com">About</a></li>
-      </ul>
-    </nav>
+    <h1>PCR Calculators</h1>
+    <!-- You can add a "Back" or "Home" link here if desired -->
   </header>
 
-  <!-- Main container for the tool cards -->
+  <!-- Main content with two calculator sections -->
   <main>
-    <!-- The grid of 6 tool cards -->
-    <section class="tool-list">
-      <!-- 1) PCR -->
-      <div class="tool-card" data-link="pcr.html">
-        <img src="https://via.placeholder.com/200x150" alt="PCR">
-        <h3>PCR</h3>
-      </div>
-      
-      <!-- 2) Bacteria -->
-      <div class="tool-card" data-link="bacteria.html">
-        <img src="https://via.placeholder.com/200x150" alt="Bacteria">
-        <h3>Bacteria</h3>
-      </div>
+    <!-- 1) PCR DNA Copy Number Calculator -->
+    <section class="calc-section">
+      <h2>PCR DNA Copy Number Calculator</h2>
+      <form class="calc-form" id="copyNumberForm">
+        <!-- Example fields: DNA mass, length, etc. -->
+        <div class="form-group">
+          <label for="dnaMass">Template Mass (ng)</label>
+          <input type="number" id="dnaMass" placeholder="e.g., 10">
+        </div>
+        <div class="form-group">
+          <label for="dnaLength">Amplicon Length (bp)</label>
+          <input type="number" id="dnaLength" placeholder="e.g., 500">
+        </div>
+        <!-- Button -->
+        <button type="button" id="copyCalcBtn" class="primary-btn">
+          Calculate Copy Number
+        </button>
+      </form>
+      <div id="copyResult" class="result-box"></div>
+    </section>
 
-      <!-- 3) Electrophoresis -->
-      <div class="tool-card" data-link="electrophoresis.html">
-        <img src="https://via.placeholder.com/200x150" alt="Electrophoresis">
-        <h3>Electrophoresis</h3>
-      </div>
-
-      <!-- 4) Concentration -->
-      <div class="tool-card" data-link="concentration.html">
-        <img src="https://via.placeholder.com/200x150" alt="Concentration">
-        <h3>Concentration</h3>
-      </div>
-
-      <!-- 5) OMICS -->
-      <div class="tool-card" data-link="omics.html">
-        <img src="https://via.placeholder.com/200x150" alt="OMICS">
-        <h3>OMICS</h3>
-      </div>
-
-      <!-- 6) Unit Conversion -->
-      <div class="tool-card" data-link="units.html">
-        <img src="https://via.placeholder.com/200x150" alt="Unit Conversion">
-        <h3>Unit Conversion</h3>
-      </div>
+    <!-- 2) Annealing Temperature (Tm) Calculator -->
+    <section class="calc-section">
+      <h2>Annealing Temperature Calculator</h2>
+      <form class="calc-form" id="annealingForm">
+        <div class="form-group">
+          <label for="primerSeq">Primer Sequence</label>
+          <input type="text" id="primerSeq" placeholder="e.g., ATGCGT...">
+        </div>
+        <button type="button" id="annealingCalcBtn" class="primary-btn">
+          Calculate Tm
+        </button>
+      </form>
+      <div id="annealingResult" class="result-box"></div>
     </section>
   </main>
 
-  <!-- Optional Footer
+  <!-- Footer (optional) -->
+  <!--
   <footer class="footer">
-    <p>&copy; 2025 BioCalc. All rights reserved.</p>
+    <p>&copy; 2025 BioCalc Toolbox. All rights reserved.</p>
   </footer>
   -->
 
-  <!-- Embedded JS for fade-out navigation -->
+  <!-- Embedded JS for both calculators -->
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const body = document.getElementById("body-fade");
-      const cards = document.querySelectorAll(".tool-card");
+    /***********************************************
+     * PCR DNA Copy Number Calculator
+     ***********************************************/
+    const copyCalcBtn = document.getElementById('copyCalcBtn');
+    const copyResult = document.getElementById('copyResult');
 
-      cards.forEach(card => {
-        card.addEventListener("click", e => {
-          e.preventDefault();
-          const link = card.getAttribute("data-link");
-          if (!link) return;
+    copyCalcBtn.addEventListener('click', () => {
+      const dnaMass = parseFloat(document.getElementById('dnaMass').value);
+      const dnaLength = parseFloat(document.getElementById('dnaLength').value);
 
-          // Add the fade-out class
-          body.classList.add("fade-out");
+      if (isNaN(dnaMass) || isNaN(dnaLength) || dnaMass <= 0 || dnaLength <= 0) {
+        copyResult.textContent = 'Please enter valid positive numbers for mass and length.';
+        return;
+      }
 
-          // Wait for the transition to end, then navigate
-          body.addEventListener("transitionend", function handler() {
-            body.removeEventListener("transitionend", handler);
-            window.location.href = link;
-          });
-        });
-      });
+      /*
+       * EXAMPLE FORMULA (very simplified):
+       * 1) Convert ng -> g
+       * 2) One bp has average MW ~ 650 g/mol (approx)
+       * 3) #moles = (mass / MW)
+       * 4) #copies = #moles * Avogadro's number
+       */
+      const avogadro = 6.022e23;
+      const massInGrams = dnaMass * 1e-9;  // ng -> g
+      const avgMwPerBp = 650;             // g/mol per bp, approx
+      const totalMw = dnaLength * avgMwPerBp; 
+      const moles = massInGrams / totalMw;
+      const copies = moles * avogadro;
+
+      copyResult.innerHTML = `
+        <p>Estimated copy number: 
+          <strong>${copies.toExponential(2)}</strong>
+        </p>
+      `;
+    });
+
+    /***********************************************
+     * Annealing Temperature (Tm) Calculator
+     ***********************************************/
+    const annealingCalcBtn = document.getElementById('annealingCalcBtn');
+    const annealingResult = document.getElementById('annealingResult');
+
+    annealingCalcBtn.addEventListener('click', () => {
+      const seq = document.getElementById('primerSeq').value.trim().toUpperCase();
+      if (!seq) {
+        annealingResult.textContent = 'Please enter a primer sequence.';
+        return;
+      }
+
+      let aCount = 0, tCount = 0, gCount = 0, cCount = 0;
+      for (let i = 0; i < seq.length; i++) {
+        switch (seq[i]) {
+          case 'A': aCount++; break;
+          case 'T': tCount++; break;
+          case 'G': gCount++; break;
+          case 'C': cCount++; break;
+        }
+      }
+
+      // Very simplistic "Wallace rule": Tm = 2*(A+T) + 4*(G+C)
+      const tm = 2 * (aCount + tCount) + 4 * (gCount + cCount);
+
+      annealingResult.innerHTML = `
+        <p>Primer length: <strong>${seq.length}</strong> bases</p>
+        <p>Estimated Tm (basic Wallace rule): 
+          <strong>${tm} °C</strong>
+        </p>
+      `;
     });
   </script>
 </body>
