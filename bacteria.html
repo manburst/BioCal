@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bacteria Calculators</title>
+  <!-- Link to your shared CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header with link back to Home -->
+  <header class="header">
+    <h1>Bacteria Calculators</h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main container with two calculator sections -->
+  <main>
+
+    <!-- 1) Generation Time Calculator -->
+    <section class="calc-section active">
+      <h2>Generation Time Calculator</h2>
+
+      <p>
+        In exponential growth, the population size evolves according to 
+        <em>N(t) = N(0) · (1 + r)<sup>t</sup></em>, where 
+        <strong>N(0)</strong> is the initial population, 
+        <strong>r</strong> is the growth rate, 
+        and <strong>t</strong> is time (after t<sub>0</sub> = 0).
+      </p>
+      <p>
+        We often want the <strong>generation time</strong> (or doubling time) 
+        <em>t<sub>d</sub></em>, which is how long it takes for the population 
+        to double: <em>N(t<sub>d</sub>) = 2 · N(0)</em>.  
+        By rearranging the formula, we get:
+      </p>
+      <p style="font-style: italic; margin-left: 1rem;">
+        t<sub>d</sub> = ln(2) / ln(1 + r)
+      </p>
+      <p>
+        If you know the population at time <em>t</em>, say N(t), 
+        and the initial population N(0), we can first solve for 
+        <strong>r</strong> and then compute t<sub>d</sub>.
+      </p>
+
+      <!-- Input form for Generation Time -->
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="initialPop">Initial Population N(0)</label>
+          <input type="number" id="initialPop" placeholder="e.g., 1000" />
+        </div>
+        <div class="form-group">
+          <label for="finalPop">Population at Time t, N(t)</label>
+          <input type="number" id="finalPop" placeholder="e.g., 8000" />
+        </div>
+        <div class="form-group">
+          <label for="elapsedTime">Elapsed Time (t)</label>
+          <input type="number" id="elapsedTime" placeholder="e.g., 4 (hours)" />
+        </div>
+        <button type="button" id="genTimeBtn" class="primary-btn">Calculate Generation Time</button>
+      </form>
+
+      <div id="genTimeResult" class="result-box"></div>
+    </section>
+
+
+    <!-- 2) CFU Counting Calculator -->
+    <section class="calc-section active">
+      <h2>CFU Counting Calculator</h2>
+
+      <p>
+        A <strong>CFU</strong> (colony-forming unit) describes the concentration of 
+        microorganisms in a sample. If you know how many colonies grew on an agar plate, 
+        the dilution factor, and the plated volume, you can compute the CFU per unit volume.
+      </p>
+      <p>
+        The formula is:
+      </p>
+      <p style="font-style: italic; margin-left: 1rem;">
+        CFU = (n<sub>c</sub> × DF) / V<sub>c</sub>
+      </p>
+      <p>
+        Where <em>n<sub>c</sub></em> is the number of colonies, 
+        <em>DF</em> is the dilution factor, and 
+        <em>V<sub>c</sub></em> is the volume of the culture plate.
+      </p>
+
+      <!-- Input form for CFU -->
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="numColonies">Number of Colonies (n<sub>c</sub>)</label>
+          <input type="number" id="numColonies" placeholder="e.g., 9" />
+        </div>
+        <div class="form-group">
+          <label for="dilutionFactor">Dilution Factor (DF)</label>
+          <input type="number" id="dilutionFactor" placeholder="e.g., 7" />
+        </div>
+        <div class="form-group">
+          <label for="volumePlate">Volume of Culture Plate (V<sub>c</sub>)</label>
+          <input type="number" id="volumePlate" placeholder="e.g., 10 (mL)" />
+        </div>
+        <button type="button" id="cfuCalcBtn" class="primary-btn">Calculate CFU</button>
+      </form>
+
+      <div id="cfuResult" class="result-box"></div>
+    </section>
+
+  </main>
+
+  <!-- Embedded JS for both calculators -->
+  <script>
+    /******************************************************
+     * 1) Generation Time Calculator 
+     *    (Given N(0), N(t), and t, find growth rate r and 
+     *    then doubling time t_d = ln(2)/ln(1+r))
+     ******************************************************/
+    const genTimeBtn    = document.getElementById('genTimeBtn');
+    const genTimeResult = document.getElementById('genTimeResult');
+
+    genTimeBtn.addEventListener('click', () => {
+      const N0 = parseFloat(document.getElementById('initialPop').value);
+      const Nt = parseFloat(document.getElementById('finalPop').value);
+      const t  = parseFloat(document.getElementById('elapsedTime').value);
+
+      if ( isNaN(N0) || isNaN(Nt) || isNaN(t) || N0 <= 0 || Nt <= 0 || t <= 0 ) {
+        genTimeResult.textContent = 'Please enter valid positive values for N(0), N(t), and elapsed time.';
+        return;
+      }
+
+      // Growth rate: r = (Nt/N0)^(1/t) - 1
+      const ratio = Nt / N0;
+      const r = Math.pow(ratio, 1/t) - 1;
+
+      if (r <= 0) {
+        genTimeResult.textContent = 'Calculated growth rate (r) is non-positive. Check your inputs.';
+        return;
+      }
+
+      // Generation (doubling) time: t_d = ln(2) / ln(1 + r)
+      const td = Math.log(2) / Math.log(1 + r);
+
+      genTimeResult.innerHTML = `
+        <p><strong>Growth Rate (r):</strong> ${r.toFixed(4)}</p>
+        <p><strong>Generation (Doubling) Time (t<sub>d</sub>):</strong> 
+          ${td.toFixed(2)} (same time units as input t)</p>
+      `;
+    });
+
+
+    /******************************************************
+     * 2) CFU Counting Calculator 
+     *    CFU = (nc * DF) / Vc
+     ******************************************************/
+    const cfuCalcBtn = document.getElementById('cfuCalcBtn');
+    const cfuResult  = document.getElementById('cfuResult');
+
+    cfuCalcBtn.addEventListener('click', () => {
+      const n_c = parseFloat(document.getElementById('numColonies').value);
+      const DF  = parseFloat(document.getElementById('dilutionFactor').value);
+      const Vc  = parseFloat(document.getElementById('volumePlate').value);
+
+      if ( isNaN(n_c) || isNaN(DF) || isNaN(Vc) || n_c <= 0 || DF <= 0 || Vc <= 0 ) {
+        cfuResult.textContent = 'Please enter valid positive values for colonies, dilution factor, and volume.';
+        return;
+      }
+
+      // CFU = (n_c * DF) / V_c
+      const cfu = (n_c * DF) / Vc;
+
+      cfuResult.innerHTML = `
+        <p><strong>Colony Forming Units (CFU):</strong> ${cfu.toFixed(2)}</p>
+      `;
+    });
+  </script>
+</body>
+</html>
