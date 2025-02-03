@@ -31,11 +31,13 @@ body {
   opacity: 0;
   animation: fadeIn 1.2s ease forwards; /* fade from 0 to 1 */
 }
+
 @keyframes fadeIn {
   to {
     opacity: 1;
   }
 }
+
 .fade-out {
   opacity: 0; /* transitions to 0 over 0.8s because of body { transition } */
 }
@@ -51,6 +53,7 @@ body {
   padding: 1rem 2rem;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
+
 .header h1 {
   font-weight: 600;
   margin-bottom: 0.3rem;
@@ -83,6 +86,7 @@ body {
   font-weight: 500;
   font-size: 1.1rem; /* bigger link */
 }
+
 .navbar a:hover {
   text-decoration: underline;
 }
@@ -109,6 +113,7 @@ main {
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
+
 .tool-card {
   background-color: #fff;
   border-radius: 12px;
@@ -120,15 +125,18 @@ main {
   color: #333;
   text-decoration: none;
 }
+
 .tool-card:hover {
   transform: scale(1.02);
 }
+
 .tool-card img {
   width: 100%;
   height: auto;
   border-radius: 8px;
   margin-bottom: 0.5rem;
 }
+
 .tool-card h3 {
   font-size: 1.1rem;
   font-weight: 600;
@@ -141,21 +149,61 @@ main {
    (For separate tool pages)
 ========================= */
 .calc-section {
-  display: none;
+  display: none; /* hidden by default unless .active is added */
   background-color: #fff;
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   margin-bottom: 2rem;
 }
+
 .calc-section.active {
   display: block;
 }
+
 .calc-section h2 {
   margin-bottom: 1rem;
   font-size: 1.4rem;
   color: #333;
   font-weight: 600;
+}
+
+/* =========================
+   7) Form Inputs
+   (UPDATED: bigger, rounder inputs)
+========================= */
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 0.75rem 1rem;       /* bigger padding for a modern look */
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;         /* round corners */
+  outline: none;
+  transition: border-color 0.2s ease;
+  background-color: #fff;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+  border-color: #007aff;       /* highlight on focus */
+}
+
+/* "Primary" button style */
+.primary-btn {
+  padding: 0.6rem 1.2rem;
+  background-color: #007aff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.primary-btn:hover {
+  background-color: #006ae6;
 }
 
 /* "Back" button styling */
@@ -170,12 +218,13 @@ main {
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
+
 .back-btn:hover {
   background-color: #777;
 }
 
 /* =========================
-   7) Footer
+   8) Footer
 ========================= */
 .footer {
   text-align: center;
