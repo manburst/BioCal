@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unit Conversions</title>
+  <!-- Link to shared CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>Unit Conversions</h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- 1) Frequently Used Unit Converter -->
+    <section class="calc-section active">
+      <h2>Unit Converter</h2>
+      <p>
+        This tool helps you quickly convert between **common units** 
+        (mass, volume, and length) often used in biological labs. 
+        Just choose a **category** (e.g., mass), pick **from** and **to** units, 
+        then enter your **value** to convert.
+      </p>
+
+      <!-- Unit Converter Form -->
+      <form class="calc-form">
+        <!-- Category: Mass / Volume / Length -->
+        <div class="form-group">
+          <label for="categorySelect">Category</label>
+          <select id="categorySelect">
+            <option value="mass" selected>Mass</option>
+            <option value="volume">Volume</option>
+            <option value="length">Length</option>
+          </select>
+        </div>
+
+        <!-- From Unit -->
+        <div class="form-group">
+          <label for="fromUnit">From Unit</label>
+          <select id="fromUnit">
+            <!-- Defaults for mass; we will change them in JS upon category selection -->
+          </select>
+        </div>
+
+        <!-- To Unit -->
+        <div class="form-group">
+          <label for="toUnit">To Unit</label>
+          <select id="toUnit">
+            <!-- Defaults for mass; we will change them in JS upon category selection -->
+          </select>
+        </div>
+
+        <!-- Value to convert -->
+        <div class="form-group">
+          <label for="inputValue">Value</label>
+          <input type="number" id="inputValue" placeholder="e.g., 100" step="0.001">
+        </div>
+
+        <!-- Buttons: Convert + Clear -->
+        <button type="button" id="unitConvertBtn" class="primary-btn">Convert</button>
+        <button type="button" id="unitClearBtn" class="primary-btn" style="background-color:#999;">Clear</button>
+      </form>
+      <div id="unitResult" class="result-box"></div>
+    </section>
+
+
+    <!-- 2) Centrifuge Converter -->
+    <section class="calc-section active">
+      <h2>Centrifuge Converter</h2>
+      <p>
+        Convert between **RPM** (revolutions per minute) and **RCF** (relative 
+        centrifugal force). RCF (often written as ×g) measures how many times 
+        stronger the force is compared to Earth's gravity. The rotor radius 
+        (in cm) is crucial for these calculations.
+      </p>
+      <p>
+        <strong>Formulas:</strong><br>
+        RCF = 11.18 × <em>radius</em> × (RPM/1000)²<br>
+        RPM = √( RCF / ( <em>radius</em> × 11.18 ) ) × 1000
+      </p>
+
+      <!-- We can do 2 mini-forms or 1 combined approach. 
+           Let's do a single approach with 2 separate "modes" (radio or select). -->
+
+      <form class="calc-form">
+        <!-- Radio buttons: choose mode: "RPM to RCF" or "RCF to RPM" -->
+        <div class="form-group">
+          <label><input type="radio" name="centMode" value="rpmToRcf" checked> RPM → RCF</label>
+          <label><input type="radio" name="centMode" value="rcfToRpm"> RCF → RPM</label>
+        </div>
+
+        <div class="form-group">
+          <label for="centRadius">Rotor Radius (cm)</label>
+          <input type="number" id="centRadius" placeholder="e.g., 7.5" step="0.1">
+        </div>
+
+        <!-- We'll dynamically show either RPM or RCF input based on radio selection. -->
+        <div class="form-group" id="rpmInputGroup">
+          <label for="rpmInput">RPM</label>
+          <input type="number" id="rpmInput" placeholder="e.g., 8000" step="10">
+        </div>
+        <div class="form-group" id="rcfInputGroup" style="display:none;">
+          <label for="rcfInput">RCF (×g)</label>
+          <input type="number" id="rcfInput" placeholder="e.g., 5000" step="10">
+        </div>
+
+        <!-- Buttons: Convert + Clear -->
+        <button type="button" id="centConvertBtn" class="primary-btn">Convert</button>
+        <button type="button" id="centClearBtn" class="primary-btn" style="background-color:#999;">Clear</button>
+      </form>
+      <div id="centResult" class="result-box"></div>
+    </section>
+
+  </main>
+
+  <!-- Embedded JS -->
+  <script>
+    /******************************************
+     * 1) UNIT CONVERTER (Mass / Volume / Length)
+     ******************************************/
+    const categorySelect = document.getElementById('categorySelect');
+    const fromUnitSelect = document.getElementById('fromUnit');
+    const toUnitSelect   = document.getElementById('toUnit');
+    const inputValue     = document.getElementById('inputValue');
+    const unitConvertBtn = document.getElementById('unitConvertBtn');
+    const unitClearBtn   = document.getElementById('unitClearBtn');
+    const unitResult     = document.getElementById('unitResult');
+
+    // We'll define "base units" for each category:
+    // mass base: grams
+    // volume base: liters
+    // length base: meters
+    // Then store conversion factors to/from the base.
+    // e.g. 1 mg = 1e-3 g, 1 µg = 1e-6 g, etc.
+
+    const unitData = {
+      mass: {
+        base: 'g',
+        units: {
+          µg: 1e-6, // 1 µg = 1e-6 g
+          mg: 1e-3, // 1 mg = 1e-3 g
+          g: 1,     // 1 g = 1 g
+          kg: 1e3   // 1 kg = 1e3 g
+        }
+      },
+      volume: {
+        base: 'L',
+        units: {
+          µL: 1e-6, // 1 µL = 1e-6 L
+          mL: 1e-3, // 1 mL = 1e-3 L
+          L: 1,     // 1 L = 1 L
+        }
+      },
+      length: {
+        base: 'm',
+        units: {
+          nm: 1e-9,   // 1 nm = 1e-9 m
+          µm: 1e-6,   // 1 µm = 1e-6 m
+          mm: 1e-3,   // 1 mm = 1e-3 m
+          cm: 1e-2,   // 1 cm = 1e-2 m
+          m: 1,       // 1 m
+        }
+      }
+    };
+
+    // Populate fromUnit / toUnit selects based on category
+    function populateUnits(category) {
+      const data = unitData[category].units;
+      // Clear existing options
+      fromUnitSelect.innerHTML = '';
+      toUnitSelect.innerHTML   = '';
+      // Fill with new options
+      for (const unit in data) {
+        // Create option for fromUnit
+        const opt1 = document.createElement('option');
+        opt1.value = unit;
+        opt1.text  = unit;
+        fromUnitSelect.appendChild(opt1);
+        // Create option for toUnit
+        const opt2 = document.createElement('option');
+        opt2.value = unit;
+        opt2.text  = unit;
+        toUnitSelect.appendChild(opt2);
+      }
+    }
+
+    // On page load, default to mass
+    populateUnits('mass');
+
+    categorySelect.addEventListener('change', () => {
+      populateUnits(categorySelect.value);
+      unitResult.innerHTML = ''; // clear result if user changes category
+    });
+
+    // Conversion function
+    unitConvertBtn.addEventListener('click', () => {
+      const cat     = categorySelect.value;
+      const fromU   = fromUnitSelect.value;
+      const toU     = toUnitSelect.value;
+      const val     = parseFloat(inputValue.value);
+
+      if (isNaN(val)) {
+        unitResult.textContent = 'Please enter a valid numeric value to convert.';
+        return;
+      }
+      if (fromU === toU) {
+        // same unit => no real conversion
+        unitResult.innerHTML = `<p><strong>Result:</strong> ${val}</p>`;
+        return;
+      }
+
+      // Convert "val" from 'fromU' -> base -> 'toU'
+      const baseFactor = unitData[cat].units[fromU]; 
+      const targetFactor = unitData[cat].units[toU];
+      // step 1: convert input => base (like g)
+      const inBase = val * baseFactor; 
+      // step 2: convert base => target
+      const outVal = inBase / targetFactor;
+
+      unitResult.innerHTML = `
+        <p><strong>Result:</strong> ${outVal.toExponential(4)} ${toU}</p>
+      `;
+    });
+
+    // Clear button
+    unitClearBtn.addEventListener('click', () => {
+      inputValue.value = '';
+      unitResult.innerHTML = '';
+    });
+
+
+    /******************************************
+     * 2) CENTRIFUGE CONVERTER (RPM <-> RCF)
+     ******************************************/
+    const centConvertBtn = document.getElementById('centConvertBtn');
+    const centClearBtn   = document.getElementById('centClearBtn');
+    const centRadius     = document.getElementById('centRadius');
+    const rpmInput       = document.getElementById('rpmInput');
+    const rcfInput       = document.getElementById('rcfInput');
+    const centResult     = document.getElementById('centResult');
+
+    // Radio buttons to pick mode:
+    // (rpmToRcf or rcfToRpm) => show/hide corresponding input
+    const modeRadios = document.getElementsByName('centMode');
+    function updateMode() {
+      let mode = 'rpmToRcf';
+      for (const r of modeRadios) {
+        if (r.checked) {
+          mode = r.value;
+          break;
+        }
+      }
+      if (mode === 'rpmToRcf') {
+        document.getElementById('rpmInputGroup').style.display = 'block';
+        document.getElementById('rcfInputGroup').style.display = 'none';
+      } else {
+        document.getElementById('rpmInputGroup').style.display = 'none';
+        document.getElementById('rcfInputGroup').style.display = 'block';
+      }
+      centResult.innerHTML = '';
+    }
+
+    modeRadios.forEach(r => {
+      r.addEventListener('change', updateMode);
+    });
+    // Default mode is rpmToRcf
+    updateMode();
+
+    centConvertBtn.addEventListener('click', () => {
+      // Identify mode
+      let mode = 'rpmToRcf';
+      for (const r of modeRadios) {
+        if (r.checked) mode = r.value;
+      }
+
+      const radiusVal = parseFloat(centRadius.value);
+      if (isNaN(radiusVal) || radiusVal <= 0) {
+        centResult.textContent = 'Please enter a valid positive rotor radius.';
+        return;
+      }
+
+      if (mode === 'rpmToRcf') {
+        const rpmVal = parseFloat(rpmInput.value);
+        if (isNaN(rpmVal) || rpmVal < 0) {
+          centResult.textContent = 'Please enter a valid RPM.';
+          return;
+        }
+        // RCF = 11.18 × radius × (rpm/1000)²
+        const rcf = 11.18 * radiusVal * Math.pow(rpmVal / 1000, 2);
+        centResult.innerHTML = `
+          <p><strong>RCF (×g):</strong> ${rcf.toFixed(2)}</p>
+        `;
+      } else {
+        const rcfVal = parseFloat(rcfInput.value);
+        if (isNaN(rcfVal) || rcfVal < 0) {
+          centResult.textContent = 'Please enter a valid RCF.';
+          return;
+        }
+        // RPM = sqrt( RCF / (radius * 11.18) ) * 1000
+        const rpm = Math.sqrt(rcfVal / (radiusVal * 11.18)) * 1000;
+        centResult.innerHTML = `
+          <p><strong>RPM:</strong> ${rpm.toFixed(0)}</p>
+        `;
+      }
+    });
+
+    // Clear button
+    centClearBtn.addEventListener('click', () => {
+      centRadius.value = '';
+      rpmInput.value   = '';
+      rcfInput.value   = '';
+      centResult.innerHTML = '';
+    });
+  </script>
+</body>
+</html>
