@@ -62,7 +62,9 @@
           <label for="elapsedTime">Elapsed Time (t)</label>
           <input type="number" id="elapsedTime" placeholder="e.g., 4 (hours)" />
         </div>
+        <!-- Buttons: Calculate + Clear -->
         <button type="button" id="genTimeBtn" class="primary-btn">Calculate Generation Time</button>
+        <button type="button" id="genTimeClearBtn" class="primary-btn" style="background-color:#999;">Clear</button>
       </form>
 
       <div id="genTimeResult" class="result-box"></div>
@@ -104,7 +106,9 @@
           <label for="volumePlate">Volume of Culture Plate (V<sub>c</sub>)</label>
           <input type="number" id="volumePlate" placeholder="e.g., 10 (mL)" />
         </div>
+        <!-- Buttons: Calculate + Clear -->
         <button type="button" id="cfuCalcBtn" class="primary-btn">Calculate CFU</button>
+        <button type="button" id="cfuClearBtn" class="primary-btn" style="background-color:#999;">Clear</button>
       </form>
 
       <div id="cfuResult" class="result-box"></div>
@@ -115,17 +119,20 @@
   <!-- Embedded JS for both calculators -->
   <script>
     /******************************************************
-     * 1) Generation Time Calculator 
-     *    (Given N(0), N(t), and t, find growth rate r and 
-     *    then doubling time t_d = ln(2)/ln(1+r))
+     * Generation Time Calculator 
+     * (Given N(0), N(t), and t, find r => t_d = ln(2)/ln(1+r))
      ******************************************************/
-    const genTimeBtn    = document.getElementById('genTimeBtn');
+    const genTimeBtn = document.getElementById('genTimeBtn');
+    const genTimeClearBtn = document.getElementById('genTimeClearBtn');
     const genTimeResult = document.getElementById('genTimeResult');
+    const initialPopInput = document.getElementById('initialPop');
+    const finalPopInput = document.getElementById('finalPop');
+    const elapsedTimeInput = document.getElementById('elapsedTime');
 
     genTimeBtn.addEventListener('click', () => {
-      const N0 = parseFloat(document.getElementById('initialPop').value);
-      const Nt = parseFloat(document.getElementById('finalPop').value);
-      const t  = parseFloat(document.getElementById('elapsedTime').value);
+      const N0 = parseFloat(initialPopInput.value);
+      const Nt = parseFloat(finalPopInput.value);
+      const t  = parseFloat(elapsedTimeInput.value);
 
       if ( isNaN(N0) || isNaN(Nt) || isNaN(t) || N0 <= 0 || Nt <= 0 || t <= 0 ) {
         genTimeResult.textContent = 'Please enter valid positive values for N(0), N(t), and elapsed time.';
@@ -151,18 +158,30 @@
       `;
     });
 
+    // Clear button for Generation Time
+    genTimeClearBtn.addEventListener('click', () => {
+      initialPopInput.value = '';
+      finalPopInput.value = '';
+      elapsedTimeInput.value = '';
+      genTimeResult.innerHTML = '';
+    });
+
 
     /******************************************************
-     * 2) CFU Counting Calculator 
-     *    CFU = (nc * DF) / Vc
+     * CFU Counting Calculator 
+     * CFU = (n_c * DF) / V_c
      ******************************************************/
     const cfuCalcBtn = document.getElementById('cfuCalcBtn');
+    const cfuClearBtn = document.getElementById('cfuClearBtn');
     const cfuResult  = document.getElementById('cfuResult');
+    const numColoniesInput = document.getElementById('numColonies');
+    const dilutionFactorInput = document.getElementById('dilutionFactor');
+    const volumePlateInput = document.getElementById('volumePlate');
 
     cfuCalcBtn.addEventListener('click', () => {
-      const n_c = parseFloat(document.getElementById('numColonies').value);
-      const DF  = parseFloat(document.getElementById('dilutionFactor').value);
-      const Vc  = parseFloat(document.getElementById('volumePlate').value);
+      const n_c = parseFloat(numColoniesInput.value);
+      const DF  = parseFloat(dilutionFactorInput.value);
+      const Vc  = parseFloat(volumePlateInput.value);
 
       if ( isNaN(n_c) || isNaN(DF) || isNaN(Vc) || n_c <= 0 || DF <= 0 || Vc <= 0 ) {
         cfuResult.textContent = 'Please enter valid positive values for colonies, dilution factor, and volume.';
@@ -175,6 +194,14 @@
       cfuResult.innerHTML = `
         <p><strong>Colony Forming Units (CFU):</strong> ${cfu.toFixed(2)}</p>
       `;
+    });
+
+    // Clear button for CFU
+    cfuClearBtn.addEventListener('click', () => {
+      numColoniesInput.value = '';
+      dilutionFactorInput.value = '';
+      volumePlateInput.value = '';
+      cfuResult.innerHTML = '';
     });
   </script>
 </body>
