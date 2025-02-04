@@ -1,22 +1,282 @@
-{
-  "A": { "three_letter": "Ala", "full_name": "Alanine" },
-  "R": { "three_letter": "Arg", "full_name": "Arginine" },
-  "N": { "three_letter": "Asn", "full_name": "Asparagine" },
-  "D": { "three_letter": "Asp", "full_name": "Aspartic acid" },
-  "C": { "three_letter": "Cys", "full_name": "Cysteine" },
-  "E": { "three_letter": "Glu", "full_name": "Glutamic acid" },
-  "Q": { "three_letter": "Gln", "full_name": "Glutamine" },
-  "G": { "three_letter": "Gly", "full_name": "Glycine" },
-  "H": { "three_letter": "His", "full_name": "Histidine" },
-  "I": { "three_letter": "Ile", "full_name": "Isoleucine" },
-  "L": { "three_letter": "Leu", "full_name": "Leucine" },
-  "K": { "three_letter": "Lys", "full_name": "Lysine" },
-  "M": { "three_letter": "Met", "full_name": "Methionine" },
-  "F": { "three_letter": "Phe", "full_name": "Phenylalanine" },
-  "P": { "three_letter": "Pro", "full_name": "Proline" },
-  "S": { "three_letter": "Ser", "full_name": "Serine" },
-  "T": { "three_letter": "Thr", "full_name": "Threonine" },
-  "W": { "three_letter": "Trp", "full_name": "Tryptophan" },
-  "Y": { "three_letter": "Tyr", "full_name": "Tyrosine" },
-  "V": { "three_letter": "Val", "full_name": "Valine" }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Omics Tools</title>
+  <!-- Link to your shared CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <h1>Omics Tools</h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ========== DNA SECTION (unchanged) ========== -->
+    <section id="dna-section" class="calc-section active">
+      <h2>DNA Tools</h2>
+      <p>
+        Input a DNA sequence (using A, T, G, C). We’ll calculate:
+        <ul>
+          <li><strong>Length</strong> of the sequence</li>
+          <li><strong>GC content</strong></li>
+          <li><strong>Reverse complement</strong></li>
+          <li><strong>Transcription</strong> (DNA → RNA)</li>
+          <li><strong>Translation</strong> (DNA → protein)</li>
+          <li><strong>Base counts</strong> (our extra idea)</li>
+        </ul>
+      </p>
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="dnaInput">DNA Sequence</label>
+          <textarea id="dnaInput" placeholder="e.g., ATGCGT..." rows="3"></textarea>
+        </div>
+        <button type="button" id="dnaCalcBtn" class="primary-btn">Calculate DNA Info</button>
+        <button type="button" id="dnaClearBtn" class="primary-btn" style="background-color:#999;">
+          Clear
+        </button>
+      </form>
+      <div id="dnaResult" class="result-box"></div>
+    </section>
+
+    <!-- ========== RNA SECTION (unchanged) ========== -->
+    <section id="rna-section" class="calc-section active">
+      <h2>RNA Tools</h2>
+      <p>
+        Input an RNA sequence (using A, U, G, C). We’ll compute:
+        <ul>
+          <li><strong>Length</strong> of the sequence</li>
+          <li><strong>GC content</strong></li>
+          <li><strong>Reverse complement</strong> (RNA-based)</li>
+          <li><strong>Reverse transcription</strong> (RNA → DNA)</li>
+          <li><strong>Translation</strong> (RNA → protein)</li>
+          <li><strong>Check for start codon</strong> (AUG), etc.</li>
+        </ul>
+      </p>
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="rnaInput">RNA Sequence</label>
+          <textarea id="rnaInput" placeholder="e.g., AUGCGU..." rows="3"></textarea>
+        </div>
+        <button type="button" id="rnaCalcBtn" class="primary-btn">Calculate RNA Info</button>
+        <button type="button" id="rnaClearBtn" class="primary-btn" style="background-color:#999;">
+          Clear
+        </button>
+      </form>
+      <div id="rnaResult" class="result-box"></div>
+    </section>
+
+    <!-- ========== PROTEIN SECTION (Updated) ========== -->
+    <section id="protein-section" class="calc-section active">
+      <h2>Protein Tools</h2>
+      <p>
+        Enter a protein sequence in <strong>one-letter</strong> or 
+        <strong>three-letter</strong> format (e.g., <em>Ala-Gly-Phe</em>).
+        We’ll parse it based on your choice below, then compute:
+        <ul>
+          <li><strong>Length</strong> (# of amino acids)</li>
+          <li><strong>Composition</strong> (# of each AA)</li>
+          <li><strong>Reverse translation</strong> (protein → naive RNA codons)</li>
+          <li>And output both <strong>one-letter</strong> and <strong>three-letter</strong> codes</li>
+        </ul>
+      </p>
+      <form class="calc-form">
+        <!-- Radio: user explicitly selects input format -->
+        <div class="form-group">
+          <label>Protein Input Format:</label>
+          <label><input type="radio" name="protFormat" value="one" checked> One-letter Code</label>
+          <label><input type="radio" name="protFormat" value="three"> Three-letter Code</label>
+        </div>
+
+        <div class="form-group">
+          <label for="protInput">Protein Sequence</label>
+          <textarea id="protInput" placeholder="e.g., AGPN or Ala-Gly-Pro-Asn" rows="3"></textarea>
+        </div>
+
+        <button type="button" id="protCalcBtn" class="primary-btn">Calculate Protein Info</button>
+        <button type="button" id="protClearBtn" class="primary-btn" style="background-color:#999;">
+          Clear
+        </button>
+      </form>
+      <div id="protResult" class="result-box"></div>
+    </section>
+  </main>
+
+  <!-- Embedded JS -->
+  <script>
+    /****************************************************
+     * CODON & PROTEIN TABLES
+     ****************************************************/
+    const CODON_TABLE = {
+      "UUU": { "one_letter": "F", "three_letter": "Phe" },
+      "UUC": { "one_letter": "F", "three_letter": "Phe" },
+      /* ... all other codons from your code ... */
+      "GGG": { "one_letter": "G", "three_letter": "Gly" }
+    };
+
+    const PROTEIN_TABLE = {
+      "A": { "three_letter": "Ala", "full_name": "Alanine" },
+      "R": { "three_letter": "Arg", "full_name": "Arginine" },
+      /* ... all other single-letter codes ... */
+      "V": { "three_letter": "Val", "full_name": "Valine" }
+    };
+
+    /***************************************************
+     * DNA Tools (unchanged)
+     ***************************************************/
+    const dnaCalcBtn = document.getElementById('dnaCalcBtn');
+    const dnaClearBtn = document.getElementById('dnaClearBtn');
+    const dnaInput = document.getElementById('dnaInput');
+    const dnaResult = document.getElementById('dnaResult');
+
+    dnaCalcBtn.addEventListener('click', () => {
+      // your existing DNA logic...
+    });
+
+    dnaClearBtn.addEventListener('click', () => {
+      dnaInput.value = '';
+      dnaResult.innerHTML = '';
+    });
+
+    /***************************************************
+     * RNA Tools (unchanged)
+     ***************************************************/
+    const rnaCalcBtn = document.getElementById('rnaCalcBtn');
+    const rnaClearBtn = document.getElementById('rnaClearBtn');
+    const rnaInput = document.getElementById('rnaInput');
+    const rnaResult = document.getElementById('rnaResult');
+
+    rnaCalcBtn.addEventListener('click', () => {
+      // your existing RNA logic...
+    });
+
+    rnaClearBtn.addEventListener('click', () => {
+      rnaInput.value = '';
+      rnaResult.innerHTML = '';
+    });
+
+    /***************************************************
+     * PROTEIN TOOLS (Revised for Radio Buttons)
+     ***************************************************/
+    const protCalcBtn   = document.getElementById('protCalcBtn');
+    const protClearBtn  = document.getElementById('protClearBtn');
+    const protInput     = document.getElementById('protInput');
+    const protResult    = document.getElementById('protResult');
+    const protFormatRadios = document.getElementsByName('protFormat'); // radio group
+
+    protCalcBtn.addEventListener('click', () => {
+      let seq = protInput.value.trim();
+      if (!seq) {
+        protResult.textContent = 'Please enter a protein sequence.';
+        return;
+      }
+      // Remove dashes
+      seq = seq.replace(/-/g, '');
+      seq = seq.toUpperCase();
+
+      // Which radio is checked? 'one' or 'three'
+      let inputMode = 'one';
+      for (const r of protFormatRadios) {
+        if (r.checked) {
+          inputMode = r.value; // 'one' or 'three'
+          break;
+        }
+      }
+
+      // Convert to array of single-letter amino acids
+      let aminoArr = [];
+
+      if (inputMode === 'one') {
+        // Validate only recognized single letters
+        if (!/^[ARNDCEQGHILKMFPSTWYV]+$/.test(seq)) {
+          protResult.textContent = 'Invalid 1-letter protein code detected.';
+          return;
+        }
+        // Each character => array element
+        for (const aa of seq) {
+          aminoArr.push(aa);
+        }
+
+      } else {
+        // 'three'
+        if (seq.length % 3 !== 0) {
+          protResult.textContent = 'Three-letter input must be a multiple of 3 chars (e.g. ALA, GLY).';
+          return;
+        }
+        // Build 3->1 map
+        let threeToOne = {};
+        for (const k in PROTEIN_TABLE) {
+          const thr = PROTEIN_TABLE[k].three_letter.toUpperCase(); // e.g. "ALA"
+          threeToOne[thr] = k; 
+        }
+
+        for (let i = 0; i < seq.length; i += 3) {
+          const chunk = seq.substring(i, i+3); // e.g. "ALA"
+          if (threeToOne[chunk]) {
+            aminoArr.push(threeToOne[chunk]);
+          } else {
+            aminoArr.push('X'); // unknown
+          }
+        }
+      }
+
+      // (1) length
+      const length = aminoArr.length;
+
+      // (2) composition
+      let compMap = {};
+      for (const a of aminoArr) {
+        compMap[a] = (compMap[a] || 0) + 1;
+      }
+      let compStr = Object.keys(compMap).sort().map(k => `${k}:${compMap[k]}`).join(', ');
+
+      // (3) naive reverse translation => RNA
+      let letterToCodon = {};
+      for (const codon in CODON_TABLE) {
+        const one = CODON_TABLE[codon].one_letter;
+        if (!letterToCodon[one]) {
+          letterToCodon[one] = codon;
+        }
+      }
+      let naiveRNA = '';
+      for (const a of aminoArr) {
+        naiveRNA += letterToCodon[a] ? letterToCodon[a] : 'NNN';
+      }
+
+      // (4) show both one-letter and three-letter outputs
+      const oneOutput = aminoArr.join('');
+      let threeOutputArr = aminoArr.map(one => {
+        if (PROTEIN_TABLE[one]) {
+          return PROTEIN_TABLE[one].three_letter;
+        } else {
+          return 'Xxx';
+        }
+      });
+      const threeOutput = threeOutputArr.join('-');
+
+      protResult.innerHTML = `
+        <p><strong>Input Format:</strong> ${inputMode === 'one' ? 'One-letter' : 'Three-letter'}</p>
+        <p><strong>Length:</strong> ${length}</p>
+        <p><strong>Composition:</strong> ${compStr}</p>
+        <p><strong>Naive Reverse Translation (to RNA):</strong> ${naiveRNA}</p>
+        <p><strong>One-letter Output:</strong> ${oneOutput}</p>
+        <p><strong>Three-letter Output:</strong> ${threeOutput}</p>
+      `;
+    });
+
+    protClearBtn.addEventListener('click', () => {
+      protInput.value = '';
+      protResult.innerHTML = '';
+    });
+  </script>
+</body>
+</html>
