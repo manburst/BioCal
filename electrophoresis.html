@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gel Electrophoresis</title>
+  <!-- Link to your shared CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header with link back to Home -->
+  <header class="header">
+    <h1>Gel Electrophoresis</h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- 1) Agarose Gel Section -->
+    <section class="calc-section active">
+      <h2>Agarose Gel</h2>
+
+      <!-- Short Protocol / Instructions -->
+      <p>
+        Use this calculator to prepare an agarose gel at 0.8%, 1.0%, or 2.0% in 
+        volumes of 50, 75, or 100 mL. The recipe also includes Gel Red and 0.5% TBE.  
+        Below is a brief protocol:
+      </p>
+      <ol>
+        <li>Measure the appropriate volume of 0.5% TBE.</li>
+        <li>Add the correct mass of agarose (see table/calculator below).</li>
+        <li>Microwave solution until agarose dissolves (around 2 minutes total, stopping to swirl).</li>
+        <li>Add Gel Red (careful with gloves).</li>
+        <li>Pour gel into rig, insert comb, and let solidify (20–25 min).</li>
+        <li>Fill rig with 0.5% TBE until gel is covered.</li>
+        <li>Load samples and run at ~96 V for ~45 min.</li>
+      </ol>
+
+      <!-- Agarose Calculator -->
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="agarosePercent">Agarose %</label>
+          <select id="agarosePercent">
+            <option value="0.8">0.8%</option>
+            <option value="1.0">1.0%</option>
+            <option value="2.0">2.0%</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="agaroseVolume">Final Volume (mL)</label>
+          <select id="agaroseVolume">
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <button type="button" id="agaroseCalcBtn" class="primary-btn">Calculate Agarose Recipe</button>
+      </form>
+
+      <div id="agaroseResult" class="result-box"></div>
+    </section>
+
+
+    <!-- 2) SDS-PAGE Section -->
+    <section class="calc-section active">
+      <h2>SDS-PAGE</h2>
+
+      <!-- Short Protocol / Instructions -->
+      <p>
+        This section helps you prepare **stacking** and **separating** gels for SDS-PAGE. 
+        Below is a concise protocol:
+      </p>
+      <ol>
+        <li>Set up the casting frames and clamp the glass plates.</li>
+        <li>Prepare the separating gel solution (10 mL) using the chosen acrylamide%. Pour into plate gap. Top with water or isopropanol. Let solidify 20–30 min.</li>
+        <li>Discard water, prepare stacking gel solution (5 mL), and pour. Insert comb. Solidify 20–30 min.</li>
+        <li>Remove comb, place plates in cell, add running buffer (1× Tris/Glycine/SDS).</li>
+        <li>Mix samples with 5× loading buffer; boil 5–10 min. Load wells. Run at ~120 V for ~1 hour (time depends on acrylamide%).</li>
+      </ol>
+
+      <!-- SDS Calculator -->
+      <form class="calc-form">
+        <h3>1) Stacking Gel (5 mL)</h3>
+        <button type="button" id="stackingBtn" class="primary-btn">Show Stacking Gel Recipe</button>
+        <div id="stackingResult" class="result-box"></div>
+
+        <h3>2) Separating Gel (10 mL)</h3>
+        <div class="form-group">
+          <label for="acrylamidePercent">Acrylamide % (6, 8, 10, 12, 15)</label>
+          <input type="number" id="acrylamidePercent" placeholder="e.g., 10" />
+        </div>
+        <button type="button" id="separatingBtn" class="primary-btn">Show Separating Gel Recipe</button>
+        <div id="separatingResult" class="result-box"></div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Embedded JS -->
+  <script>
+    /****************************************
+     * 1) Agarose Gel Calculator
+     ****************************************/
+    const agaroseCalcBtn = document.getElementById('agaroseCalcBtn');
+    const agaroseResult  = document.getElementById('agaroseResult');
+
+    // Predefined data from your table:
+    // For 0.8%, 1.0%, 2.0% at volumes of 50, 75, or 100
+    // We'll also store Gel Red amounts:
+    // 50mL => 1.5uL, 75mL => 2.25uL, 100mL => 3uL
+
+    const agaroseData = {
+      '0.8': {
+        '50': 0.4,
+        '75': 0.6,
+        '100': 0.8
+      },
+      '1.0': {
+        '50': 0.5,
+        '75': 0.75,
+        '100': 1.0
+      },
+      '2.0': {
+        '50': 1.0,
+        '75': 1.5,
+        '100': 2.0
+      }
+    };
+
+    const gelRedData = {
+      '50': 1.5,
+      '75': 2.25,
+      '100': 3
+    };
+
+    agaroseCalcBtn.addEventListener('click', () => {
+      const percent = document.getElementById('agarosePercent').value; 
+      const volume = document.getElementById('agaroseVolume').value;
+
+      // Grab from our table
+      const agaroseMass = agaroseData[percent][volume]; 
+      const gelRedUl = gelRedData[volume];
+
+      agaroseResult.innerHTML = `
+        <p><strong>Agarose Gel Recipe:</strong></p>
+        <ul>
+          <li>Volume of 0.5% TBE: <strong>${volume} mL</strong></li>
+          <li>Agarose: <strong>${agaroseMass.toFixed(2)} g</strong></li>
+          <li>Gel Red: <strong>${gelRedUl} µL</strong></li>
+        </ul>
+        <p>
+          Prepare in a flask, microwave in ~1-min intervals until dissolved, 
+          swirl, then add Gel Red before pouring into rig.
+        </p>
+      `;
+    });
+
+
+    /****************************************
+     * 2) SDS-PAGE Calculator
+     ****************************************/
+    const stackingBtn      = document.getElementById('stackingBtn');
+    const stackingResult   = document.getElementById('stackingResult');
+    const separatingBtn    = document.getElementById('separatingBtn');
+    const separatingResult = document.getElementById('separatingResult');
+
+    // Table from your instructions:
+    // For 5mL stacking gel:
+    // H2O 2.975 ml
+    // 0.5 M Tris-HCl (pH 6.8) 1.25 ml
+    // 10% SDS 0.05 ml
+    // Acrylamide/Bis (30%/0.8%) 0.67 ml
+    // 10% APS 0.05 ml
+    // TEMED 0.005 ml
+    const stackingGelHTML = `
+      <p><strong>5 mL Stacking Gel Recipe:</strong></p>
+      <ul>
+        <li>H<sub>2</sub>O: 2.975 mL</li>
+        <li>0.5 M Tris-HCl (pH 6.8): 1.25 mL</li>
+        <li>10% SDS: 0.05 mL</li>
+        <li>30% Acrylamide/Bis: 0.67 mL</li>
+        <li>10% APS: 0.05 mL</li>
+        <li>TEMED: 0.005 mL</li>
+      </ul>
+      <p>
+        Mix gently and pour on top of the polymerized separating gel. 
+        Insert comb. Gelates in ~20–30 min.
+      </p>
+    `;
+
+    stackingBtn.addEventListener('click', () => {
+      stackingResult.innerHTML = stackingGelHTML;
+    });
+
+
+    // For 10 mL separating gel (6%, 8%, 10%, 12%, 15%)
+    // H2O, Acrylamide/Bis, 1.5 M Tris (pH 8.8), 10% SDS, 10% APS, TEMED
+    // from your table:
+    const sepGelData = {
+      '6': {
+        h2o: 5.2,
+        acryl: 2.0,
+        tris: 2.6,
+        sds: 0.1,
+        aps: 0.1,
+        temed: 0.01
+      },
+      '8': {
+        h2o: 4.6,
+        acryl: 2.6,
+        tris: 2.6,
+        sds: 0.1,
+        aps: 0.1,
+        temed: 0.01
+      },
+      '10': {
+        h2o: 3.8,
+        acryl: 3.4,
+        tris: 2.6,
+        sds: 0.1,
+        aps: 0.1,
+        temed: 0.01
+      },
+      '12': {
+        h2o: 3.2,
+        acryl: 4.0,
+        tris: 2.6,
+        sds: 0.1,
+        aps: 0.1,
+        temed: 0.01
+      },
+      '15': {
+        h2o: 2.2,
+        acryl: 5.0,
+        tris: 2.6,
+        sds: 0.1,
+        aps: 0.1,
+        temed: 0.01
+      }
+    };
+
+    separatingBtn.addEventListener('click', () => {
+      const userPercent = document.getElementById('acrylamidePercent').value.trim();
+      if (!sepGelData[userPercent]) {
+        separatingResult.textContent = 'Please enter a valid acrylamide% (6, 8, 10, 12, or 15).';
+        return;
+      }
+
+      const recipe = sepGelData[userPercent];
+      const html = `
+        <p><strong>10 mL Separating Gel (${userPercent}%):</strong></p>
+        <ul>
+          <li>H<sub>2</sub>O: ${recipe.h2o} mL</li>
+          <li>Acrylamide/Bis (30%): ${recipe.acryl} mL</li>
+          <li>1.5 M Tris (pH 8.8): ${recipe.tris} mL</li>
+          <li>10% SDS: ${recipe.sds} mL</li>
+          <li>10% APS: ${recipe.aps} mL</li>
+          <li>TEMED: ${recipe.temed} mL</li>
+        </ul>
+        <p>Mix gently, pour between plates. Top with water/isopropanol, wait 20–30 min to solidify.</p>
+      `;
+      separatingResult.innerHTML = html;
+    });
+  </script>
+</body>
+</html>
