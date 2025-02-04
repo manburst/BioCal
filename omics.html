@@ -79,7 +79,7 @@
     </section>
 
 
-    <!-- 3) Protein Section - updated to accept ONE-LETTER only -->
+    <!-- 3) Protein Section: One-letter input only, always output both one- and three-letter -->
     <section id="protein-section" class="calc-section active">
       <h2>Protein Tools</h2>
       <p>
@@ -90,22 +90,13 @@
           <li><strong>Length</strong> (number of amino acids)</li>
           <li><strong>Composition</strong> (# of each AA)</li>
           <li><strong>Reverse translation</strong> (protein → naive RNA codons)</li>
-          <li>
-            An <strong>output toggle</strong> to show the final sequence 
-            in one-letter or three-letter code
-          </li>
+          <li>Show the final sequence in <strong>both</strong> 1-letter and 3-letter forms</li>
         </ul>
       </p>
       <form class="calc-form">
         <div class="form-group">
           <label for="protInput">Protein Sequence (One-letter only)</label>
           <textarea id="protInput" placeholder="e.g., AGPN" rows="3"></textarea>
-        </div>
-        <!-- Toggle for output format -->
-        <div class="form-group">
-          <label>Output Format:</label>
-          <label><input type="radio" name="protFormat" value="one" checked> One-letter</label>
-          <label><input type="radio" name="protFormat" value="three"> Three-letter</label>
         </div>
         <!-- Buttons: Calculate + Clear -->
         <button type="button" id="protCalcBtn" class="primary-btn">Calculate Protein Info</button>
@@ -213,9 +204,8 @@
       "V": { "three_letter": "Val", "full_name": "Valine" }
     };
 
-
     /*********************************************
-     * DNA TOOLS (unchanged from your code)
+     * DNA TOOLS
      *********************************************/
     const dnaCalcBtn   = document.getElementById('dnaCalcBtn');
     const dnaClearBtn  = document.getElementById('dnaClearBtn');
@@ -279,7 +269,7 @@
 
 
     /*********************************************
-     * RNA TOOLS (unchanged from your code)
+     * RNA TOOLS
      *********************************************/
     const rnaCalcBtn   = document.getElementById('rnaCalcBtn');
     const rnaClearBtn  = document.getElementById('rnaClearBtn');
@@ -343,37 +333,25 @@
 
     /*********************************************
      * PROTEIN TOOLS: One-letter input only
+     * Always display both 1-letter & 3-letter
      *********************************************/
     const protCalcBtn   = document.getElementById('protCalcBtn');
     const protClearBtn  = document.getElementById('protClearBtn');
     const protInput     = document.getElementById('protInput');
     const protResult    = document.getElementById('protResult');
-    const protFormatRadios = document.getElementsByName('protFormat');
-
-    // Which output format: 'one' or 'three'
-    function getProteinOutputFormat() {
-      let fmt = 'one';
-      for (const r of protFormatRadios) {
-        if (r.checked) {
-          fmt = r.value;
-          break;
-        }
-      }
-      return fmt;
-    }
 
     protCalcBtn.addEventListener('click', () => {
       let seq = protInput.value.trim().toUpperCase();
       if (!seq) {
-        protResult.textContent = 'Please enter a protein sequence in one-letter code.';
+        protResult.textContent = 'Please enter a protein sequence (one-letter).';
         return;
       }
       // remove dashes
       seq = seq.replace(/-/g, '');
 
-      // validate: only A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V
+      // validate: only A,R,N,D,C,E,Q,G,H,I,L,K,M,F,P,S,T,W,Y,V
       if (!/^[ARNDCEQGHILKMFPSTWYV]+$/.test(seq)) {
-        protResult.textContent = 'Invalid characters found. Use only valid single-letter amino acid codes (A,R,N,D,C,E,Q,G,H,I,L,K,M,F,P,S,T,W,Y,V).';
+        protResult.textContent = 'Invalid characters found. Use only valid single-letter codes (A,R,N,D,C,E,Q,G,H,I,L,K,M,F,P,S,T,W,Y,V).';
         return;
       }
 
@@ -391,16 +369,13 @@
       let compStr = Object.keys(compMap).sort().map(k => `${k}:${compMap[k]}`).join(', ');
 
       // 3) Reverse translation => naive RNA
-      // Build letter => codon map
       let letterToCodon = {};
       for (const codon in CODON_TABLE) {
         const one = CODON_TABLE[codon].one_letter;
-        // first codon for that one-letter, if not assigned
         if (!letterToCodon[one]) {
           letterToCodon[one] = codon;
         }
       }
-      // unknown => NNN
       let naiveRNA = '';
       for (const aa of aminoArr) {
         if (letterToCodon[aa]) {
@@ -410,30 +385,24 @@
         }
       }
 
-      // 4) Output in user-chosen format
-      const outFmt = getProteinOutputFormat(); // 'one' or 'three'
-      let outputStr = '';
-      if (outFmt === 'one') {
-        // just the sequence joined
-        outputStr = aminoArr.join('');
-      } else {
-        // three-letter with dashes
-        let arr3 = aminoArr.map(one => {
-          if (PROTEIN_TABLE[one]) {
-            return PROTEIN_TABLE[one].three_letter;
-          } else {
-            return 'Xxx';
-          }
-        });
-        outputStr = arr3.join('-');
-      }
+      // 4) Build both 1-letter and 3-letter output
+      const oneLetter = aminoArr.join('');
+      let threeLetterArr = aminoArr.map(one => {
+        if (PROTEIN_TABLE[one]) {
+          return PROTEIN_TABLE[one].three_letter;
+        } else {
+          return 'Xxx';
+        }
+      });
+      const threeLetter = threeLetterArr.join('-');
 
-      // Build final result
+      // final result
       protResult.innerHTML = `
         <p><strong>Length:</strong> ${length}</p>
         <p><strong>Composition:</strong> ${compStr}</p>
         <p><strong>Naive Reverse Translation (RNA):</strong> ${naiveRNA}</p>
-        <p><strong>Output Sequence [${outFmt}]:</strong> ${outputStr}</p>
+        <p><strong>One-letter Output:</strong> ${oneLetter}</p>
+        <p><strong>Three-letter Output:</strong> ${threeLetter}</p>
       `;
     });
 
