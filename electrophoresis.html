@@ -46,7 +46,7 @@
         <div class="form-group">
           <label for="agarosePercent">Agarose %</label>
           <select id="agarosePercent">
-            <option value="0.8">0.8%</option>
+            <option value="0.8" selected>0.8%</option>
             <option value="1.0">1.0%</option>
             <option value="2.0">2.0%</option>
           </select>
@@ -54,12 +54,18 @@
         <div class="form-group">
           <label for="agaroseVolume">Final Volume (mL)</label>
           <select id="agaroseVolume">
-            <option value="50">50</option>
+            <option value="50" selected>50</option>
             <option value="75">75</option>
             <option value="100">100</option>
           </select>
         </div>
-        <button type="button" id="agaroseCalcBtn" class="primary-btn">Calculate Agarose Recipe</button>
+        <!-- Buttons: Calculate + Reset -->
+        <button type="button" id="agaroseCalcBtn" class="primary-btn">
+          Calculate Agarose Recipe
+        </button>
+        <button type="button" id="agaroseResetBtn" class="primary-btn" style="background-color: #999;">
+          Reset
+        </button>
       </form>
 
       <div id="agaroseResult" class="result-box"></div>
@@ -72,12 +78,12 @@
 
       <!-- Short Protocol / Instructions -->
       <p>
-        This section helps you prepare **stacking** and **separating** gels for SDS-PAGE. 
+        This section helps you prepare <strong>stacking</strong> and <strong>separating</strong> gels for SDS-PAGE. 
         Below is a concise protocol:
       </p>
       <ol>
         <li>Set up the casting frames and clamp the glass plates.</li>
-        <li>Prepare the separating gel solution (10 mL) using the chosen acrylamide%. Pour into plate gap. Top with water or isopropanol. Let solidify 20–30 min.</li>
+        <li>Prepare the separating gel solution (10 mL) using the chosen acrylamide%. Pour into plate gap. Top with water/isopropanol. Let solidify 20–30 min.</li>
         <li>Discard water, prepare stacking gel solution (5 mL), and pour. Insert comb. Solidify 20–30 min.</li>
         <li>Remove comb, place plates in cell, add running buffer (1× Tris/Glycine/SDS).</li>
         <li>Mix samples with 5× loading buffer; boil 5–10 min. Load wells. Run at ~120 V for ~1 hour (time depends on acrylamide%).</li>
@@ -94,7 +100,14 @@
           <label for="acrylamidePercent">Acrylamide % (6, 8, 10, 12, 15)</label>
           <input type="number" id="acrylamidePercent" placeholder="e.g., 10" />
         </div>
-        <button type="button" id="separatingBtn" class="primary-btn">Show Separating Gel Recipe</button>
+        <!-- Buttons: Show + Reset -->
+        <button type="button" id="separatingBtn" class="primary-btn">
+          Show Separating Gel Recipe
+        </button>
+        <button type="button" id="sdsResetBtn" class="primary-btn" style="background-color: #999;">
+          Reset
+        </button>
+
         <div id="separatingResult" class="result-box"></div>
       </form>
     </section>
@@ -106,45 +119,26 @@
     /****************************************
      * 1) Agarose Gel Calculator
      ****************************************/
-    const agaroseCalcBtn = document.getElementById('agaroseCalcBtn');
-    const agaroseResult  = document.getElementById('agaroseResult');
+    const agaroseCalcBtn  = document.getElementById('agaroseCalcBtn');
+    const agaroseResetBtn = document.getElementById('agaroseResetBtn');
+    const agaroseResult   = document.getElementById('agaroseResult');
+    const agarosePercent  = document.getElementById('agarosePercent');
+    const agaroseVolume   = document.getElementById('agaroseVolume');
 
     // Predefined data from your table:
-    // For 0.8%, 1.0%, 2.0% at volumes of 50, 75, or 100
-    // We'll also store Gel Red amounts:
-    // 50mL => 1.5uL, 75mL => 2.25uL, 100mL => 3uL
-
     const agaroseData = {
-      '0.8': {
-        '50': 0.4,
-        '75': 0.6,
-        '100': 0.8
-      },
-      '1.0': {
-        '50': 0.5,
-        '75': 0.75,
-        '100': 1.0
-      },
-      '2.0': {
-        '50': 1.0,
-        '75': 1.5,
-        '100': 2.0
-      }
+      '0.8': { '50': 0.4, '75': 0.6, '100': 0.8 },
+      '1.0': { '50': 0.5, '75': 0.75,'100': 1.0 },
+      '2.0': { '50': 1.0, '75': 1.5, '100': 2.0 }
     };
-
-    const gelRedData = {
-      '50': 1.5,
-      '75': 2.25,
-      '100': 3
-    };
+    const gelRedData = { '50': 1.5, '75': 2.25, '100': 3 };
 
     agaroseCalcBtn.addEventListener('click', () => {
-      const percent = document.getElementById('agarosePercent').value; 
-      const volume = document.getElementById('agaroseVolume').value;
+      const percent = agarosePercent.value;
+      const volume  = agaroseVolume.value;
 
-      // Grab from our table
-      const agaroseMass = agaroseData[percent][volume]; 
-      const gelRedUl = gelRedData[volume];
+      const agaroseMass = agaroseData[percent][volume];
+      const gelRedUl    = gelRedData[volume];
 
       agaroseResult.innerHTML = `
         <p><strong>Agarose Gel Recipe:</strong></p>
@@ -160,23 +154,25 @@
       `;
     });
 
+    // Reset button: reverts to default (0.8% & 50mL) and clears output
+    agaroseResetBtn.addEventListener('click', () => {
+      agarosePercent.value = '0.8';    // default
+      agaroseVolume.value  = '50';     // default
+      agaroseResult.innerHTML = '';
+    });
+
 
     /****************************************
      * 2) SDS-PAGE Calculator
      ****************************************/
-    const stackingBtn      = document.getElementById('stackingBtn');
-    const stackingResult   = document.getElementById('stackingResult');
-    const separatingBtn    = document.getElementById('separatingBtn');
-    const separatingResult = document.getElementById('separatingResult');
+    const stackingBtn       = document.getElementById('stackingBtn');
+    const stackingResult    = document.getElementById('stackingResult');
+    const separatingBtn     = document.getElementById('separatingBtn');
+    const separatingResult  = document.getElementById('separatingResult');
+    const sdsResetBtn       = document.getElementById('sdsResetBtn');
+    const acrylamidePercent = document.getElementById('acrylamidePercent');
 
-    // Table from your instructions:
-    // For 5mL stacking gel:
-    // H2O 2.975 ml
-    // 0.5 M Tris-HCl (pH 6.8) 1.25 ml
-    // 10% SDS 0.05 ml
-    // Acrylamide/Bis (30%/0.8%) 0.67 ml
-    // 10% APS 0.05 ml
-    // TEMED 0.005 ml
+    // Stacking Gel constant recipe
     const stackingGelHTML = `
       <p><strong>5 mL Stacking Gel Recipe:</strong></p>
       <ul>
@@ -197,55 +193,17 @@
       stackingResult.innerHTML = stackingGelHTML;
     });
 
-
-    // For 10 mL separating gel (6%, 8%, 10%, 12%, 15%)
-    // H2O, Acrylamide/Bis, 1.5 M Tris (pH 8.8), 10% SDS, 10% APS, TEMED
-    // from your table:
+    // Data for 10 mL separating gel at 6%, 8%, 10%, 12%, or 15%
     const sepGelData = {
-      '6': {
-        h2o: 5.2,
-        acryl: 2.0,
-        tris: 2.6,
-        sds: 0.1,
-        aps: 0.1,
-        temed: 0.01
-      },
-      '8': {
-        h2o: 4.6,
-        acryl: 2.6,
-        tris: 2.6,
-        sds: 0.1,
-        aps: 0.1,
-        temed: 0.01
-      },
-      '10': {
-        h2o: 3.8,
-        acryl: 3.4,
-        tris: 2.6,
-        sds: 0.1,
-        aps: 0.1,
-        temed: 0.01
-      },
-      '12': {
-        h2o: 3.2,
-        acryl: 4.0,
-        tris: 2.6,
-        sds: 0.1,
-        aps: 0.1,
-        temed: 0.01
-      },
-      '15': {
-        h2o: 2.2,
-        acryl: 5.0,
-        tris: 2.6,
-        sds: 0.1,
-        aps: 0.1,
-        temed: 0.01
-      }
+      '6':  { h2o: 5.2, acryl: 2.0, tris: 2.6, sds: 0.1, aps: 0.1, temed: 0.01 },
+      '8':  { h2o: 4.6, acryl: 2.6, tris: 2.6, sds: 0.1, aps: 0.1, temed: 0.01 },
+      '10': { h2o: 3.8, acryl: 3.4, tris: 2.6, sds: 0.1, aps: 0.1, temed: 0.01 },
+      '12': { h2o: 3.2, acryl: 4.0, tris: 2.6, sds: 0.1, aps: 0.1, temed: 0.01 },
+      '15': { h2o: 2.2, acryl: 5.0, tris: 2.6, sds: 0.1, aps: 0.1, temed: 0.01 }
     };
 
     separatingBtn.addEventListener('click', () => {
-      const userPercent = document.getElementById('acrylamidePercent').value.trim();
+      const userPercent = acrylamidePercent.value.trim();
       if (!sepGelData[userPercent]) {
         separatingResult.textContent = 'Please enter a valid acrylamide% (6, 8, 10, 12, or 15).';
         return;
@@ -262,9 +220,19 @@
           <li>10% APS: ${recipe.aps} mL</li>
           <li>TEMED: ${recipe.temed} mL</li>
         </ul>
-        <p>Mix gently, pour between plates. Top with water/isopropanol, wait 20–30 min to solidify.</p>
+        <p>
+          Mix gently, pour between plates. Top with water/isopropanol, 
+          wait 20–30 min to solidify.
+        </p>
       `;
       separatingResult.innerHTML = html;
+    });
+
+    // Reset button: clears both results and resets input
+    sdsResetBtn.addEventListener('click', () => {
+      acrylamidePercent.value = '';    // blank out user input
+      stackingResult.innerHTML = '';   // hide stacking recipe
+      separatingResult.innerHTML = ''; // hide separating recipe
     });
   </script>
 </body>
