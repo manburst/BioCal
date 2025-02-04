@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Concentration Calculators</title>
+  <!-- Link to your shared CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Header with link back to Home -->
+  <header class="header">
+    <h1>Concentration Calculators</h1>
+    <nav class="navbar">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- 1) Molarity Calculator -->
+    <section class="calc-section active">
+      <h2>Molarity Calculator</h2>
+
+      <p>
+        Use this calculator to determine the mass (in grams) needed to achieve 
+        a desired molar concentration (M) for a given volume (L), based on 
+        the molecular weight (g/mol) of your compound.
+      </p>
+      <p>
+        <strong>Formula:</strong> 
+        <em>Mass (g) = Concentration (mol/L) × Volume (L) × Molecular Weight (g/mol)</em>
+      </p>
+
+      <!-- Molarity Calculator Form -->
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="molConc">Concentration (M)</label>
+          <input type="number" id="molConc" placeholder="e.g., 0.1" step="0.0001">
+        </div>
+        <div class="form-group">
+          <label for="molVolume">Volume (L)</label>
+          <input type="number" id="molVolume" placeholder="e.g., 0.5" step="0.001">
+        </div>
+        <div class="form-group">
+          <label for="molWeight">Molecular Weight (g/mol)</label>
+          <input type="number" id="molWeight" placeholder="e.g., 180.16" step="0.01">
+        </div>
+
+        <!-- Buttons: Calculate + Clear -->
+        <button type="button" id="molarityCalcBtn" class="primary-btn">
+          Calculate Mass
+        </button>
+        <button type="button" id="molarityClearBtn" class="primary-btn" style="background-color:#999;">
+          Clear
+        </button>
+      </form>
+
+      <div id="molarityResult" class="result-box"></div>
+    </section>
+
+
+    <!-- 2) Dilution Calculator -->
+    <section class="calc-section active">
+      <h2>Dilution Calculator</h2>
+
+      <p>
+        This calculator helps determine how much stock solution (C<sub>1</sub>) 
+        is needed to achieve a final concentration (C<sub>2</sub>) in a given 
+        final volume (V<sub>2</sub>). We use the classic 
+        <em>C<sub>1</sub>V<sub>1</sub> = C<sub>2</sub>V<sub>2</sub></em> equation 
+        to solve for V<sub>1</sub>.
+      </p>
+      <p>
+        <strong>Formula:</strong>
+        <em>C<sub>1</sub>V<sub>1</sub> = C<sub>2</sub>V<sub>2</sub></em>
+      </p>
+
+      <!-- Dilution Calculator Form -->
+      <form class="calc-form">
+        <div class="form-group">
+          <label for="stockConc">Stock Concentration (C<sub>1</sub>)</label>
+          <input type="number" id="stockConc" placeholder="e.g., 2.0 (M)" step="0.001">
+        </div>
+        <div class="form-group">
+          <label for="finalConc">Final Concentration (C<sub>2</sub>)</label>
+          <input type="number" id="finalConc" placeholder="e.g., 0.5 (M)" step="0.001">
+        </div>
+        <div class="form-group">
+          <label for="finalVol">Final Volume (V<sub>2</sub> in L)</label>
+          <input type="number" id="finalVol" placeholder="e.g., 0.2" step="0.001">
+        </div>
+
+        <!-- Buttons: Calculate + Clear -->
+        <button type="button" id="dilutionCalcBtn" class="primary-btn">
+          Calculate V<sub>1</sub>
+        </button>
+        <button type="button" id="dilutionClearBtn" class="primary-btn" style="background-color:#999;">
+          Clear
+        </button>
+      </form>
+
+      <div id="dilutionResult" class="result-box"></div>
+    </section>
+
+  </main>
+
+  <!-- Embedded JS for both calculators -->
+  <script>
+    /****************************************************
+     * 1) Molarity Calculator
+     *    mass = conc (mol/L) × volume (L) × MW (g/mol)
+     ****************************************************/
+    const molarityCalcBtn   = document.getElementById('molarityCalcBtn');
+    const molarityClearBtn  = document.getElementById('molarityClearBtn');
+    const molConcInput      = document.getElementById('molConc');
+    const molVolumeInput    = document.getElementById('molVolume');
+    const molWeightInput    = document.getElementById('molWeight');
+    const molarityResult    = document.getElementById('molarityResult');
+
+    molarityCalcBtn.addEventListener('click', () => {
+      const cVal = parseFloat(molConcInput.value);
+      const vVal = parseFloat(molVolumeInput.value);
+      const mwVal = parseFloat(molWeightInput.value);
+
+      if (isNaN(cVal) || isNaN(vVal) || isNaN(mwVal) ||
+          cVal <= 0 || vVal <= 0 || mwVal <= 0) {
+        molarityResult.textContent = 'Please enter valid positive values for concentration, volume, and MW.';
+        return;
+      }
+
+      // mass (g) = c (mol/L) * v (L) * mw (g/mol)
+      const mass = cVal * vVal * mwVal;
+
+      molarityResult.innerHTML = `
+        <p><strong>Mass required:</strong> ${mass.toFixed(4)} g</p>
+      `;
+    });
+
+    // Clear button for Molarity
+    molarityClearBtn.addEventListener('click', () => {
+      molConcInput.value   = '';
+      molVolumeInput.value = '';
+      molWeightInput.value = '';
+      molarityResult.innerHTML = '';
+    });
+
+
+    /****************************************************
+     * 2) Dilution Calculator
+     *    C1V1 = C2V2 => V1 = (C2 * V2) / C1
+     ****************************************************/
+    const dilutionCalcBtn  = document.getElementById('dilutionCalcBtn');
+    const dilutionClearBtn = document.getElementById('dilutionClearBtn');
+    const stockConcInput   = document.getElementById('stockConc');
+    const finalConcInput   = document.getElementById('finalConc');
+    const finalVolInput    = document.getElementById('finalVol');
+    const dilutionResult   = document.getElementById('dilutionResult');
+
+    dilutionCalcBtn.addEventListener('click', () => {
+      const c1 = parseFloat(stockConcInput.value);
+      const c2 = parseFloat(finalConcInput.value);
+      const v2 = parseFloat(finalVolInput.value);
+
+      if (isNaN(c1) || isNaN(c2) || isNaN(v2) ||
+          c1 <= 0 || c2 <= 0 || v2 <= 0 || c2 > c1 ) {
+        dilutionResult.textContent = 'Enter valid positive values. (C2 must be <= C1)';
+        return;
+      }
+
+      // V1 = (C2 * V2) / C1
+      const v1 = (c2 * v2) / c1;
+
+      // Optional: compute volume of solvent: v2 - v1, if desired
+      const solvent = v2 - v1;
+
+      dilutionResult.innerHTML = `
+        <p><strong>Volume of Stock Needed (V<sub>1</sub>):</strong> ${v1.toFixed(4)} L</p>
+        <p><strong>Volume of Solvent:</strong> ${solvent.toFixed(4)} L (if you want total V<sub>2</sub> = ${v2} L)</p>
+      `;
+    });
+
+    // Clear button for Dilution
+    dilutionClearBtn.addEventListener('click', () => {
+      stockConcInput.value = '';
+      finalConcInput.value = '';
+      finalVolInput.value  = '';
+      dilutionResult.innerHTML = '';
+    });
+  </script>
+</body>
+</html>
